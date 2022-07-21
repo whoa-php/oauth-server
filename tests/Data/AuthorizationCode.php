@@ -31,38 +31,38 @@ class AuthorizationCode implements AuthorizationCodeInterface
     /**
      * @var string
      */
-    private $code;
+    private string $code;
 
     /**
      * @var string
      */
-    private $clientIdentifier;
+    private string $clientIdentifier;
 
     /**
      * @var string
      */
-    private $redirectUri;
+    private string $redirectUri;
 
     /**
      * @var string[]
      */
-    private $scope;
+    private array $scope;
 
     /**
      * @var bool
      */
-    private $isScopeModified = false;
+    private bool $isScopeModified = false;
 
     /**
      * @var bool
      */
-    private $isUsedEarlier = false;
+    private bool $isUsedEarlier = false;
 
     /**
-     * @param string      $code
-     * @param string      $clientIdentifier
+     * @param string $code
+     * @param string $clientIdentifier
      * @param string|null $redirectUri
-     * @param string[]    $scope
+     * @param string[] $scope
      */
     public function __construct(string $code, string $clientIdentifier, string $redirectUri = null, array $scope = [])
     {
@@ -79,7 +79,6 @@ class AuthorizationCode implements AuthorizationCodeInterface
 
     /**
      * @param string $code
-     *
      * @return AuthorizationCode
      */
     public function setCode(string $code): AuthorizationCode
@@ -99,7 +98,6 @@ class AuthorizationCode implements AuthorizationCodeInterface
 
     /**
      * @param string $clientIdentifier
-     *
      * @return AuthorizationCode
      */
     public function setClientIdentifier(string $clientIdentifier): AuthorizationCode
@@ -119,7 +117,6 @@ class AuthorizationCode implements AuthorizationCodeInterface
 
     /**
      * @param string|null $redirectUri
-     *
      * @return AuthorizationCode
      */
     public function setRedirectUri(string $redirectUri = null): AuthorizationCode
@@ -139,7 +136,6 @@ class AuthorizationCode implements AuthorizationCodeInterface
 
     /**
      * @param string[] $scope
-     *
      * @return AuthorizationCode
      */
     public function setScope(array $scope): AuthorizationCode

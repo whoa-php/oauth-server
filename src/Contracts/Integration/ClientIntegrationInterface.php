@@ -26,15 +26,13 @@ use Psr\Http\Message\ResponseInterface;
 
 /**
  * Client credentials integration interface for server.
- *
  * @package Whoa\OAuthServer
  */
 interface ClientIntegrationInterface extends IntegrationInterface
 {
     /**
      * @param ClientInterface $client
-     * @param array|null      $scopes
-     *
+     * @param array|null $scopes
      * @return array [bool $isScopeValid, string[]|null $scopeList, bool $isScopeModified] Scope list `null` for
      *               invalid, string[] otherwise.
      */
@@ -42,14 +40,11 @@ interface ClientIntegrationInterface extends IntegrationInterface
 
     /**
      * Create access token response.
-     *
      * @param ClientInterface $client
-     * @param bool            $isScopeModified
-     * @param array|null      $scope
-     * @param array           $extraParameters
-     *
+     * @param bool $isScopeModified
+     * @param array|null $scope
+     * @param array $extraParameters
      * @return ResponseInterface
-     *
      * @link https://tools.ietf.org/html/rfc6749#section-4.4.3
      */
     public function clientCreateAccessTokenResponse(

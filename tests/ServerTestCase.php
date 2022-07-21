@@ -52,7 +52,6 @@ abstract class ServerTestCase extends TestCase
      * @param array|null $postData
      * @param array|null $queryParameters
      * @param array|null $headers
-     *
      * @return ServerRequestInterface
      */
     protected function createServerRequest(
@@ -67,8 +66,8 @@ abstract class ServerTestCase extends TestCase
         };
 
         $server = null;
-        $query  = null;
-        $body   = null;
+        $query = null;
+        $body = null;
 
         if ($headers !== null) {
             foreach ($removeNulls($headers) as $header => $value) {
@@ -84,18 +83,15 @@ abstract class ServerTestCase extends TestCase
             $body = $removeNulls($postData);
         }
 
-        $request = ServerRequestFactory::fromGlobals($server, $query, $body);
-
-        return $request;
+        return ServerRequestFactory::fromGlobals($server, $query, $body);
     }
 
     /**
      * @param string $token
      * @param string $type
-     * @param int    $expiresIn
+     * @param int $expiresIn
      * @param string $refreshToken
-     * @param string $scope
-     *
+     * @param string|null $scope
      * @return array
      */
     protected function getExpectedBodyToken(
@@ -106,11 +102,11 @@ abstract class ServerTestCase extends TestCase
         string $scope = null
     ): array {
         return array_filter([
-            'access_token'  => $token,
-            'token_type'    => $type,
-            'expires_in'    => $expiresIn,
+            'access_token' => $token,
+            'token_type' => $type,
+            'expires_in' => $expiresIn,
             'refresh_token' => $refreshToken,
-            'scope'         => $scope,
+            'scope' => $scope,
         ], function ($value) {
             return $value !== null;
         });
@@ -119,8 +115,7 @@ abstract class ServerTestCase extends TestCase
     /**
      * @param string $token
      * @param string $type
-     * @param int    $expiresIn
-     *
+     * @param int $expiresIn
      * @return array
      */
     protected function getExpectedBodyTokenNoRefresh(
@@ -129,9 +124,9 @@ abstract class ServerTestCase extends TestCase
         int $expiresIn = 3600
     ): array {
         return array_filter([
-            'access_token'  => $token,
-            'token_type'    => $type,
-            'expires_in'    => $expiresIn
+            'access_token' => $token,
+            'token_type' => $type,
+            'expires_in' => $expiresIn
         ], function ($value) {
             return $value !== null;
         });
@@ -139,12 +134,10 @@ abstract class ServerTestCase extends TestCase
 
     /**
      * @param ResponseInterface $response
-     * @param int               $httpStatus
-     * @param array             $body
-     * @param string[]          $headers
-     *
+     * @param int $httpStatus
+     * @param array $body
+     * @param string[] $headers
      * @return void
-     *
      * @throws Exception
      */
     protected function validateBodyResponse(
@@ -154,9 +147,9 @@ abstract class ServerTestCase extends TestCase
         array $headers = []
     ) {
         $headers += [
-            'Content-type'  => 'application/json',
+            'Content-type' => 'application/json',
             'Cache-Control' => 'no-store',
-            'Pragma'        => 'no-cache',
+            'Pragma' => 'no-cache',
         ];
 
         $this->assertEquals($httpStatus, $response->getStatusCode());
@@ -168,10 +161,9 @@ abstract class ServerTestCase extends TestCase
     }
 
     /**
-     * @param string      $error
+     * @param string $error
      * @param string|null $description
      * @param string|null $uri
-     *
      * @return string[]
      */
     protected function getExpectedBodyTokenError(string $error, string $uri = null, string $description = null): array
@@ -181,9 +173,9 @@ abstract class ServerTestCase extends TestCase
         }
 
         return array_filter([
-            'error'             => $error,
+            'error' => $error,
             'error_description' => $description,
-            'error_uri'         => $uri,
+            'error_uri' => $uri,
         ], function ($value) {
             return $value !== null;
         });
@@ -191,8 +183,7 @@ abstract class ServerTestCase extends TestCase
 
     /**
      * @param string|null $state
-     * @param string      $code
-     *
+     * @param string $code
      * @return array
      */
     protected function getExpectedRedirectCode(
@@ -200,7 +191,7 @@ abstract class ServerTestCase extends TestCase
         string $code = SampleServer::TEST_AUTH_CODE
     ): array {
         return array_filter([
-            'code'  => $code,
+            'code' => $code,
             'state' => $state,
         ], function ($value) {
             return $value !== null;
@@ -210,10 +201,9 @@ abstract class ServerTestCase extends TestCase
     /**
      * @param string|null $state
      * @param string|null $scope
-     * @param string      $token
-     * @param string      $type
-     * @param int         $expiresIn
-     *
+     * @param string $token
+     * @param string $type
+     * @param int $expiresIn
      * @return array
      */
     protected function getExpectedRedirectToken(
@@ -224,11 +214,11 @@ abstract class ServerTestCase extends TestCase
         int $expiresIn = 3600
     ): array {
         return array_filter([
-            'access_token'  => $token,
-            'token_type'    => $type,
-            'expires_in'    => $expiresIn,
-            'scope'         => $scope,
-            'state'         => $state,
+            'access_token' => $token,
+            'token_type' => $type,
+            'expires_in' => $expiresIn,
+            'scope' => $scope,
+            'state' => $state,
         ], function ($value) {
             return $value !== null;
         });
@@ -236,13 +226,11 @@ abstract class ServerTestCase extends TestCase
 
     /**
      * @param ResponseInterface $response
-     * @param string            $redirectUri
-     * @param array             $expectedFragments
-     * @param int               $httpStatus
-     * @param string[]          $headers
-     *
+     * @param string $redirectUri
+     * @param array $expectedFragments
+     * @param int $httpStatus
+     * @param string[] $headers
      * @return void
-     *
      * @throws Exception
      */
     protected function validateRedirectResponse(
@@ -254,7 +242,7 @@ abstract class ServerTestCase extends TestCase
     ) {
         $this->assertEquals(302, $response->getStatusCode());
         $this->assertTrue($response->hasHeader('Location'));
-        /** @noinspection PhpParamsInspection */
+
         $this->assertCount(1, $response->getHeader('Location'));
         list($location) = $response->getHeader('Location');
 
@@ -273,11 +261,10 @@ abstract class ServerTestCase extends TestCase
     }
 
     /**
-     * @param string      $error
-     * @param string      $state
+     * @param string $error
+     * @param string|null $state
      * @param string|null $uri
      * @param string|null $description
-     *
      * @return string[]
      */
     protected function getExpectedRedirectCodeErrorFragments(
@@ -291,21 +278,20 @@ abstract class ServerTestCase extends TestCase
         }
 
         return array_filter([
-            'error'             => $error,
+            'error' => $error,
             'error_description' => $description,
-            'error_uri'         => $uri,
-            'state'             => $state,
+            'error_uri' => $uri,
+            'state' => $state,
         ], function ($value) {
             return $value !== null;
         });
     }
 
     /**
-     * @param string      $error
-     * @param string      $state
+     * @param string $error
+     * @param string|null $state
      * @param string|null $uri
      * @param string|null $description
-     *
      * @return string[]
      */
     protected function getExpectedRedirectTokenErrorFragments(
@@ -319,10 +305,10 @@ abstract class ServerTestCase extends TestCase
         }
 
         return array_filter([
-            'error'             => $error,
+            'error' => $error,
             'error_description' => $description,
-            'error_uri'         => $uri,
-            'state'             => $state,
+            'error_uri' => $uri,
+            'state' => $state,
         ], function ($value) {
             return $value !== null;
         });

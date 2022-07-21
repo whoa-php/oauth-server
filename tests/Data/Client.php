@@ -25,70 +25,68 @@ use Whoa\OAuthServer\Contracts\ClientInterface;
 
 /**
  * @package Whoa\Tests\OAuthServer
- *
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class Client implements ClientInterface
 {
     /**
      * @var string
      */
-    private $identifier;
+    private string $identifier;
 
     /**
      * @var bool
      */
-    private $isConfidential = false;
+    private bool $isConfidential = false;
 
     /**
      * @var string|null
      */
-    private $credentials = null;
+    private ?string $credentials = null;
 
     /**
      * @var string[]
      */
-    private $redirectionUris = [];
+    private array $redirectionUris = [];
 
     /**
      * @var string[]
      */
-    private $scopes = [];
+    private array $scopes = [];
 
     /**
      * @var bool
      */
-    private $isUseDefaultScope = false;
+    private bool $isUseDefaultScope = false;
 
     /**
      * @var bool
      */
-    private $isScopeExcessAllowed = false;
+    private bool $isScopeExcessAllowed = false;
 
     /**
      * @var bool
      */
-    private $isCodeAuthEnabled = false;
+    private bool $isCodeAuthEnabled = false;
 
     /**
      * @var bool
      */
-    private $isImplicitAuthEnabled = false;
+    private bool $isImplicitAuthEnabled = false;
 
     /**
      * @var bool
      */
-    private $isPasswordGrantEnabled = false;
+    private bool $isPasswordGrantEnabled = false;
 
     /**
      * @var bool
      */
-    private $isClientGrantEnabled = false;
+    private bool $isClientGrantEnabled = false;
 
     /**
      * @var bool
      */
-    private $isRefreshGrantEnabled = false;
+    private bool $isRefreshGrantEnabled = false;
 
     /**
      * @param string $identifier
@@ -108,7 +106,6 @@ class Client implements ClientInterface
 
     /**
      * @param string $identifier
-     *
      * @return Client
      */
     public function setIdentifier(string $identifier): Client
@@ -156,7 +153,6 @@ class Client implements ClientInterface
 
     /**
      * @param string $credentials
-     *
      * @return Client
      */
     public function setCredentials(string $credentials): Client
@@ -179,7 +175,7 @@ class Client implements ClientInterface
     /**
      * @return null|string
      */
-    public function getCredentials()
+    public function getCredentials(): ?string
     {
         return $this->credentials;
     }
@@ -194,7 +190,6 @@ class Client implements ClientInterface
 
     /**
      * @param string[] $redirectionUris
-     *
      * @return Client
      */
     public function setRedirectionUris(array $redirectionUris): Client
@@ -214,7 +209,6 @@ class Client implements ClientInterface
 
     /**
      * @param string[] $scopes
-     *
      * @return Client
      */
     public function setScopes(array $scopes): Client

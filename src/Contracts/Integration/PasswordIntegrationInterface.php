@@ -26,36 +26,29 @@ use Psr\Http\Message\ResponseInterface;
 
 /**
  * Resource owner password integration interface for server.
- *
  * @package Whoa\OAuthServer
  */
 interface PasswordIntegrationInterface extends IntegrationInterface
 {
     /**
      * @param ClientInterface|null $client
-     * @param array|null           $scopes
-     *
+     * @param array|null $scopes
      * @return array [bool $isScopeValid, string[]|null $scopeList, bool $isScopeModified] Scope list `null` for
      *               invalid, string[] otherwise.
      */
     public function passValidateScope(ClientInterface $client = null, array $scopes = null): array;
 
-    /** @noinspection PhpTooManyParametersInspection
+    /**
      * Validate resource owner credentials and create access token response. On error (e.g invalid credentials)
      * it throws OAuth exception.
-     *
-     * @param string               $userName
-     * @param string               $password
+     * @param string $userName
+     * @param string $password
      * @param ClientInterface|null $client
-     * @param bool                 $isScopeModified
-     * @param array|null           $scope
-     * @param array                $extraParameters
-     *
+     * @param bool $isScopeModified
+     * @param array|null $scope
+     * @param array $extraParameters
      * @return ResponseInterface
-     *
      * @link https://tools.ietf.org/html/rfc6749#section-4.1.4
-     *
-     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
     public function passValidateCredentialsAndCreateAccessTokenResponse(
         string $userName,

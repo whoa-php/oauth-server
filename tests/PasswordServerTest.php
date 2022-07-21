@@ -38,18 +38,17 @@ class PasswordServerTest extends ServerTestCase
     /**
      * Grant type.
      */
-    const GRANT_TYPE_PASSWORD = 'password';
+    public const GRANT_TYPE_PASSWORD = 'password';
 
     /**
      * Test successful token issue.
-     *
      * @throws Exception
      */
     public function testSuccessfulTokenIssue()
     {
         $server = new SampleServer($this->createDefaultClientRepositoryMock());
 
-        $request  = $this->createTokenRequest(
+        $request = $this->createTokenRequest(
             static::GRANT_TYPE_PASSWORD,
             SampleServer::TEST_USER_NAME,
             SampleServer::TEST_PASSWORD
@@ -61,16 +60,14 @@ class PasswordServerTest extends ServerTestCase
 
     /**
      * Test successful token issue.
-     *
      * @link https://github.com/limoncello-php/framework/issues/49
-     *
      * @throws Exception
      */
     public function testSuccessfulTokenIssueEmptyScope()
     {
         $server = new SampleServer($this->createDefaultClientRepositoryMock());
 
-        $request  = $this->createTokenRequest(
+        $request = $this->createTokenRequest(
             static::GRANT_TYPE_PASSWORD,
             SampleServer::TEST_USER_NAME,
             SampleServer::TEST_PASSWORD,
@@ -83,14 +80,13 @@ class PasswordServerTest extends ServerTestCase
 
     /**
      * Test unsupported grant type.
-     *
      * @throws Exception
      */
     public function testUnsupportedGrantType()
     {
         $server = new SampleServer($this->createDefaultClientRepositoryMock());
 
-        $request  = $this->createTokenRequest(
+        $request = $this->createTokenRequest(
             'invalid_grant',
             SampleServer::TEST_USER_NAME,
             SampleServer::TEST_PASSWORD
@@ -98,20 +94,19 @@ class PasswordServerTest extends ServerTestCase
         $response = $server->postCreateToken($request);
 
         $errorCode = OAuthTokenBodyException::ERROR_UNSUPPORTED_GRANT_TYPE;
-        $uri       = SampleServer::TEST_UNSUPPORTED_GRANT_TYPE_ERROR_URI;
+        $uri = SampleServer::TEST_UNSUPPORTED_GRANT_TYPE_ERROR_URI;
         $this->validateBodyResponse($response, 400, $this->getExpectedBodyTokenError($errorCode, $uri));
     }
 
     /**
      * Test invalid scope.
-     *
      * @throws Exception
      */
     public function testInvalidScope()
     {
         $server = new SampleServer($this->createDefaultClientRepositoryMock());
 
-        $request  = $this->createTokenRequest(
+        $request = $this->createTokenRequest(
             static::GRANT_TYPE_PASSWORD,
             SampleServer::TEST_USER_NAME,
             SampleServer::TEST_PASSWORD,
@@ -125,14 +120,13 @@ class PasswordServerTest extends ServerTestCase
 
     /**
      * Test absent user name.
-     *
      * @throws Exception
      */
     public function testAbsentUserName()
     {
         $server = new SampleServer($this->createDefaultClientRepositoryMock());
 
-        $request  = $this->createTokenRequest(
+        $request = $this->createTokenRequest(
             static::GRANT_TYPE_PASSWORD,
             null, // user name
             SampleServer::TEST_PASSWORD
@@ -145,14 +139,13 @@ class PasswordServerTest extends ServerTestCase
 
     /**
      * Test invalid credentials.
-     *
      * @throws Exception
      */
     public function testInvalidCredentials()
     {
         $server = new SampleServer($this->createDefaultClientRepositoryMock());
 
-        $request  = $this->createTokenRequest(
+        $request = $this->createTokenRequest(
             static::GRANT_TYPE_PASSWORD,
             SampleServer::TEST_USER_NAME,
             SampleServer::TEST_PASSWORD . '1234567890' // invalid password
@@ -165,14 +158,13 @@ class PasswordServerTest extends ServerTestCase
 
     /**
      * Test with client credentials where client has prohibited 'password grant'.
-     *
      * @throws Exception
      */
     public function testUnauthorizedClient()
     {
         $identifier = 'whatever_id';
-        $password   = 'secret';
-        $client     = (new Client($identifier))
+        $password = 'secret';
+        $client = (new Client($identifier))
             ->setCredentials(password_hash($password, PASSWORD_DEFAULT))
             ->disablePasswordGrant();
 
@@ -184,7 +176,7 @@ class PasswordServerTest extends ServerTestCase
 
         $server = new SampleServer($repository);
 
-        $request  = $this->createTokenRequest(
+        $request = $this->createTokenRequest(
             static::GRANT_TYPE_PASSWORD,
             SampleServer::TEST_USER_NAME,
             SampleServer::TEST_PASSWORD,
@@ -199,14 +191,13 @@ class PasswordServerTest extends ServerTestCase
 
     /**
      * Test public client with credentials assigned.
-     *
      * @throws Exception
      */
     public function testPublicClientHasCredentials()
     {
         $identifier = 'whatever_id';
-        $password   = 'secret';
-        $client     = (new Client($identifier))
+        $password = 'secret';
+        $client = (new Client($identifier))
             ->setCredentials(password_hash($password, PASSWORD_DEFAULT))
             ->enablePasswordGrant()
             ->setCredentials('whatever');
@@ -219,7 +210,7 @@ class PasswordServerTest extends ServerTestCase
 
         $server = new SampleServer($repository);
 
-        $request  = $this->createTokenRequest(
+        $request = $this->createTokenRequest(
             static::GRANT_TYPE_PASSWORD,
             SampleServer::TEST_USER_NAME,
             SampleServer::TEST_PASSWORD
@@ -235,7 +226,7 @@ class PasswordServerTest extends ServerTestCase
      */
     private function createDefaultClientRepositoryMock(): RepositoryInterface
     {
-        $identifier    = 'default_client_id';
+        $identifier = 'default_client_id';
         $defaultClient = (new Client($identifier))
             ->enablePasswordGrant()
             ->useDefaultScopesOnEmptyRequest();
@@ -254,8 +245,7 @@ class PasswordServerTest extends ServerTestCase
      * @param string|null $username
      * @param string|null $password
      * @param string|null $scope
-     * @param array       $headers
-     *
+     * @param array $headers
      * @return ServerRequestInterface
      */
     private function createTokenRequest(
@@ -264,15 +254,12 @@ class PasswordServerTest extends ServerTestCase
         string $password = null,
         string $scope = null,
         array $headers = []
-    )
-    {
-        $request = $this->createServerRequest([
+    ): ServerRequestInterface {
+        return $this->createServerRequest([
             'grant_type' => $grantType,
-            'username'   => $username,
-            'password'   => $password,
-            'scope'      => $scope,
+            'username' => $username,
+            'password' => $password,
+            'scope' => $scope,
         ], null, $headers);
-
-        return $request;
     }
 }

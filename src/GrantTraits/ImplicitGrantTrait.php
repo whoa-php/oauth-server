@@ -25,6 +25,7 @@ use Whoa\OAuthServer\Contracts\ClientInterface;
 use Whoa\OAuthServer\Contracts\Integration\ImplicitIntegrationInterface;
 use Whoa\OAuthServer\Exceptions\OAuthTokenRedirectException;
 use Psr\Http\Message\ResponseInterface;
+
 use function array_key_exists;
 use function explode;
 use function is_string;
@@ -32,9 +33,7 @@ use function strlen;
 
 /**
  * Implements Implicit Grant.
- *
  * @package Whoa\OAuthServer
- *
  * @link    https://tools.ietf.org/html/rfc6749#section-1.3
  * @link    https://tools.ietf.org/html/rfc6749#section-4.2
  */
@@ -43,11 +42,10 @@ trait ImplicitGrantTrait
     /**
      * @var ImplicitIntegrationInterface
      */
-    private $implicitIntegration;
+    private ImplicitIntegrationInterface $implicitIntegration;
 
     /**
      * @param ImplicitIntegrationInterface $integration
-     *
      * @return void
      */
     public function implicitSetIntegration(ImplicitIntegrationInterface $integration): void
@@ -65,7 +63,6 @@ trait ImplicitGrantTrait
 
     /**
      * @param string[] $parameters
-     *
      * @return string|null
      */
     protected function implicitGetClientId(array $parameters): ?string
@@ -75,7 +72,6 @@ trait ImplicitGrantTrait
 
     /**
      * @param string[] $parameters
-     *
      * @return string|null
      */
     protected function implicitGetRedirectUri(array $parameters): ?string
@@ -85,7 +81,6 @@ trait ImplicitGrantTrait
 
     /**
      * @param string[] $parameters
-     *
      * @return string[]|null
      */
     protected function implicitGetScope(array $parameters): ?array
@@ -97,7 +92,6 @@ trait ImplicitGrantTrait
 
     /**
      * @param string[] $parameters
-     *
      * @return string|null
      */
     protected function implicitGetState(array $parameters): ?string
@@ -106,11 +100,10 @@ trait ImplicitGrantTrait
     }
 
     /**
-     * @param string[]        $parameters
+     * @param string[] $parameters
      * @param ClientInterface $client
-     * @param string|null     $redirectUri
-     * @param int|null        $maxStateLength
-     *
+     * @param string|null $redirectUri
+     * @param int|null $maxStateLength
      * @return ResponseInterface
      */
     protected function implicitAskResourceOwnerForApproval(
@@ -118,8 +111,7 @@ trait ImplicitGrantTrait
         ClientInterface $client,
         string $redirectUri = null,
         int $maxStateLength = null
-    ): ResponseInterface
-    {
+    ): ResponseInterface {
         $state = $this->implicitGetState($parameters);
         if ($maxStateLength !== null && strlen($state) > $maxStateLength) {
             throw new OAuthTokenRedirectException(
@@ -148,7 +140,7 @@ trait ImplicitGrantTrait
             );
         }
 
-        $response = $this->implicitGetIntegration()->implicitCreateAskResourceOwnerForApprovalResponse(
+        return $this->implicitGetIntegration()->implicitCreateAskResourceOwnerForApprovalResponse(
             $client,
             $redirectUri,
             $isScopeModified,
@@ -156,14 +148,11 @@ trait ImplicitGrantTrait
             $state,
             $parameters
         );
-
-        return $response;
     }
 
     /**
-     * @param array  $parameters
+     * @param array $parameters
      * @param string $name
-     *
      * @return null|string
      */
     private function implicitReadStringValue(array $parameters, string $name): ?string

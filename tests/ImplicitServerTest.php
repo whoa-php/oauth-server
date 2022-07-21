@@ -39,22 +39,22 @@ class ImplicitServerTest extends ServerTestCase
     /**
      * Client id.
      */
-    const CLIENT_ID = 'some_client_id';
+    public const CLIENT_ID = 'some_client_id';
 
     /**
      * Client default scope.
      */
-    const CLIENT_DEFAULT_SCOPE = 'some scope';
+    public const CLIENT_DEFAULT_SCOPE = 'some scope';
 
     /**
      * Client redirect URI.
      */
-    const REDIRECT_URI_1 = SampleServer::TEST_CLIENT_REDIRECT_URI;
+    public const REDIRECT_URI_1 = SampleServer::TEST_CLIENT_REDIRECT_URI;
 
     /**
      * Client redirect URI.
      */
-    const REDIRECT_URI_2 = 'http://example.foo/redirect2?param2=value2';
+    public const REDIRECT_URI_2 = 'http://example.foo/redirect2?param2=value2';
 
     /**
      * Test successful auth with redirect URI (POST method).
@@ -64,9 +64,9 @@ class ImplicitServerTest extends ServerTestCase
     public function testSuccessfulTokenIssue()
     {
         $server = new SampleServer($this->createRepositoryMock($this->createClient()));
-        $state  = '123';
+        $state = '123';
 
-        $request  = $this->createPostAuthRequest(
+        $request = $this->createPostAuthRequest(
             static::CLIENT_ID,
             static::REDIRECT_URI_1,
             static::CLIENT_DEFAULT_SCOPE,
@@ -79,7 +79,6 @@ class ImplicitServerTest extends ServerTestCase
 
     /**
      * Test successful auth with redirect URI (POST method).
-     *
      * @link https://github.com/limoncello-php/framework/issues/49
      *
      * @throws Exception
@@ -88,9 +87,9 @@ class ImplicitServerTest extends ServerTestCase
     {
         $client = $this->createClient()->useDefaultScopesOnEmptyRequest();
         $server = new SampleServer($this->createRepositoryMock($client));
-        $state  = '123';
+        $state = '123';
 
-        $request  = $this->createPostAuthRequest(
+        $request = $this->createPostAuthRequest(
             static::CLIENT_ID,
             static::REDIRECT_URI_1,
             '', // <-- empty scope
@@ -107,7 +106,6 @@ class ImplicitServerTest extends ServerTestCase
 
     /**
      * Test successful auth without redirect URI (GET method).
-     *
      * @throws Exception
      */
     public function testSuccessfulTokenIssueWithoutRedirectUri()
@@ -118,7 +116,7 @@ class ImplicitServerTest extends ServerTestCase
 
         $server = new SampleServer($this->createRepositoryMock($client));
 
-        $request  = $this->createGetAuthRequest(
+        $request = $this->createGetAuthRequest(
             static::CLIENT_ID,
             null,
             static::CLIENT_DEFAULT_SCOPE
@@ -130,7 +128,6 @@ class ImplicitServerTest extends ServerTestCase
 
     /**
      * Test failed auth without redirect URI.
-     *
      * @throws Exception
      */
     public function testFailedTokenIssueWithoutRedirectUri()
@@ -141,7 +138,7 @@ class ImplicitServerTest extends ServerTestCase
 
         $server = new SampleServer($this->createRepositoryMock($client));
 
-        $request  = $this->createGetAuthRequest(
+        $request = $this->createGetAuthRequest(
             static::CLIENT_ID,
             null,
             static::CLIENT_DEFAULT_SCOPE
@@ -153,7 +150,6 @@ class ImplicitServerTest extends ServerTestCase
 
     /**
      * Test failed auth due to too long `state` parameter.
-     *
      * @throws Exception
      */
     public function testFailedTokenIssueDueToTooLongStateParameter()
@@ -166,7 +162,7 @@ class ImplicitServerTest extends ServerTestCase
         $state = '123';
         $server->setMaxStateLength(1);
 
-        $request  = $this->createGetAuthRequest(
+        $request = $this->createGetAuthRequest(
             static::CLIENT_ID,
             static::REDIRECT_URI_1,
             static::CLIENT_DEFAULT_SCOPE,
@@ -181,7 +177,6 @@ class ImplicitServerTest extends ServerTestCase
 
     /**
      * Test failed auth due to invalid scope.
-     *
      * @throws Exception
      */
     public function testFailedTokenIssueDueInvalidScope()
@@ -189,9 +184,9 @@ class ImplicitServerTest extends ServerTestCase
         $client = $this->createClient();
         $client->setRedirectionUris([static::REDIRECT_URI_1]);
         $server = new SampleServer($this->createRepositoryMock($client));
-        $state  = '123';
+        $state = '123';
 
-        $request  = $this->createGetAuthRequest(
+        $request = $this->createGetAuthRequest(
             static::CLIENT_ID,
             static::REDIRECT_URI_1,
             static::CLIENT_DEFAULT_SCOPE . ' and something else',
@@ -206,7 +201,6 @@ class ImplicitServerTest extends ServerTestCase
 
     /**
      * Test failed auth due to client does not allow implicit authorization grant.
-     *
      * @throws Exception
      */
     public function testFailedTokenIssueDueImplicitGrantIsNotAllowed()
@@ -217,7 +211,7 @@ class ImplicitServerTest extends ServerTestCase
 
         $server = new SampleServer($this->createRepositoryMock($client));
 
-        $request  = $this->createGetAuthRequest(
+        $request = $this->createGetAuthRequest(
             static::CLIENT_ID,
             static::REDIRECT_URI_1,
             static::CLIENT_DEFAULT_SCOPE
@@ -231,7 +225,6 @@ class ImplicitServerTest extends ServerTestCase
 
     /**
      * @param ClientInterface $client
-     *
      * @return RepositoryInterface
      */
     private function createRepositoryMock(ClientInterface $client): RepositoryInterface
@@ -259,11 +252,10 @@ class ImplicitServerTest extends ServerTestCase
     }
 
     /**
-     * @param string      $clientId
+     * @param string $clientId
      * @param string|null $redirectUri
      * @param string|null $scope
      * @param string|null $state
-     *
      * @return ServerRequestInterface
      */
     private function createGetAuthRequest(
@@ -271,25 +263,21 @@ class ImplicitServerTest extends ServerTestCase
         string $redirectUri = null,
         string $scope = null,
         string $state = null
-    )
-    {
-        $request = $this->createServerRequest(null, [
+    ): ServerRequestInterface {
+        return $this->createServerRequest(null, [
             'response_type' => 'token',
-            'client_id'     => $clientId,
-            'redirect_uri'  => $redirectUri,
-            'scope'         => $scope,
-            'state'         => $state,
+            'client_id' => $clientId,
+            'redirect_uri' => $redirectUri,
+            'scope' => $scope,
+            'state' => $state,
         ]);
-
-        return $request;
     }
 
     /**
-     * @param string      $clientId
+     * @param string $clientId
      * @param string|null $redirectUri
      * @param string|null $scope
      * @param string|null $state
-     *
      * @return ServerRequestInterface
      */
     private function createPostAuthRequest(
@@ -297,16 +285,13 @@ class ImplicitServerTest extends ServerTestCase
         string $redirectUri = null,
         string $scope = null,
         string $state = null
-    )
-    {
-        $request = $this->createServerRequest([
+    ): ServerRequestInterface {
+        return $this->createServerRequest([
             'response_type' => 'token',
-            'client_id'     => $clientId,
-            'redirect_uri'  => $redirectUri,
-            'scope'         => $scope,
-            'state'         => $state,
+            'client_id' => $clientId,
+            'redirect_uri' => $redirectUri,
+            'scope' => $scope,
+            'state' => $state,
         ]);
-
-        return $request;
     }
 }

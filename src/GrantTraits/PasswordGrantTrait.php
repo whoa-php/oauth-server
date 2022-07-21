@@ -25,15 +25,14 @@ use Whoa\OAuthServer\Contracts\ClientInterface;
 use Whoa\OAuthServer\Contracts\Integration\PasswordIntegrationInterface;
 use Whoa\OAuthServer\Exceptions\OAuthTokenBodyException;
 use Psr\Http\Message\ResponseInterface;
+
 use function array_key_exists;
 use function explode;
 use function is_string;
 
 /**
  * Implements Resource Owner Password Credentials Grant.
- *
  * @package Whoa\OAuthServer
- *
  * @link    https://tools.ietf.org/html/rfc6749#section-1.3
  * @link    https://tools.ietf.org/html/rfc6749#section-4.3
  */
@@ -42,7 +41,7 @@ trait PasswordGrantTrait
     /**
      * @var PasswordIntegrationInterface
      */
-    private $passIntegration;
+    private PasswordIntegrationInterface $passIntegration;
 
     /**
      * @return PasswordIntegrationInterface
@@ -54,7 +53,6 @@ trait PasswordGrantTrait
 
     /**
      * @param PasswordIntegrationInterface $passIntegration
-     *
      * @return void
      */
     public function passSetIntegration(PasswordIntegrationInterface $passIntegration): void
@@ -64,7 +62,6 @@ trait PasswordGrantTrait
 
     /**
      * @param string[] $parameters
-     *
      * @return string|null
      */
     protected function passGetUserName(array $parameters): ?string
@@ -74,7 +71,6 @@ trait PasswordGrantTrait
 
     /**
      * @param string[] $parameters
-     *
      * @return string|null
      */
     protected function passGetPassword(array $parameters): ?string
@@ -84,7 +80,6 @@ trait PasswordGrantTrait
 
     /**
      * @param string[] $parameters
-     *
      * @return string[]|null
      */
     protected function passGetScope(array $parameters): ?array
@@ -95,9 +90,8 @@ trait PasswordGrantTrait
     }
 
     /**
-     * @param string[]             $parameters
+     * @param string[] $parameters
      * @param ClientInterface|null $determinedClient
-     *
      * @return ResponseInterface
      */
     protected function passIssueToken(array $parameters, ClientInterface $determinedClient = null): ResponseInterface
@@ -127,7 +121,7 @@ trait PasswordGrantTrait
             throw new OAuthTokenBodyException(OAuthTokenBodyException::ERROR_INVALID_REQUEST);
         }
 
-        $response = $this->passGetIntegration()->passValidateCredentialsAndCreateAccessTokenResponse(
+        return $this->passGetIntegration()->passValidateCredentialsAndCreateAccessTokenResponse(
             $userName,
             $password,
             $determinedClient,
@@ -135,14 +129,11 @@ trait PasswordGrantTrait
             $scopeList,
             $parameters
         );
-
-        return $response;
     }
 
     /**
-     * @param array  $parameters
+     * @param array $parameters
      * @param string $name
-     *
      * @return null|string
      */
     private function passReadStringValue(array $parameters, string $name): ?string

@@ -30,100 +30,92 @@ abstract class OAuthRedirectException extends OAuthServerException
 {
     /**
      * Error code.
-     *
      * @link https://tools.ietf.org/html/rfc6749#section-4.1.2.1
      * @link https://tools.ietf.org/html/rfc6749#section-4.2.2.1
      */
-    const ERROR_INVALID_REQUEST = 'invalid_request';
+    public const ERROR_INVALID_REQUEST = 'invalid_request';
 
     /**
      * Error code.
-     *
      * @link https://tools.ietf.org/html/rfc6749#section-4.1.2.1
      * @link https://tools.ietf.org/html/rfc6749#section-4.2.2.1
      */
-    const ERROR_UNAUTHORIZED_CLIENT = 'unauthorized_client';
+    public const ERROR_UNAUTHORIZED_CLIENT = 'unauthorized_client';
 
     /**
      * Error code.
-     *
      * @link https://tools.ietf.org/html/rfc6749#section-4.1.2.1
      * @link https://tools.ietf.org/html/rfc6749#section-4.2.2.1
      */
-    const ERROR_ACCESS_DENIED = 'access_denied';
+    public const ERROR_ACCESS_DENIED = 'access_denied';
 
     /**
      * Error code.
-     *
      * @link https://tools.ietf.org/html/rfc6749#section-4.1.2.1
      * @link https://tools.ietf.org/html/rfc6749#section-4.2.2.1
      */
-    const ERROR_UNSUPPORTED_RESPONSE_TYPE = 'unsupported_response_type';
+    public const ERROR_UNSUPPORTED_RESPONSE_TYPE = 'unsupported_response_type';
 
     /**
      * Error code.
-     *
      * @link https://tools.ietf.org/html/rfc6749#section-4.1.2.1
      * @link https://tools.ietf.org/html/rfc6749#section-4.2.2.1
      */
-    const ERROR_INVALID_SCOPE = 'invalid_scope';
+    public const ERROR_INVALID_SCOPE = 'invalid_scope';
 
     /**
      * Error code.
-     *
      * @link https://tools.ietf.org/html/rfc6749#section-4.1.2.1
      * @link https://tools.ietf.org/html/rfc6749#section-4.2.2.1
      */
-    const ERROR_SERVER_ERROR = 'server_error';
+    public const ERROR_SERVER_ERROR = 'server_error';
 
     /**
      * Error code.
-     *
      * @link https://tools.ietf.org/html/rfc6749#section-4.1.2.1
      * @link https://tools.ietf.org/html/rfc6749#section-4.2.2.1
      */
-    const ERROR_TEMPORARILY_UNAVAILABLE = 'temporarily_unavailable';
+    public const ERROR_TEMPORARILY_UNAVAILABLE = 'temporarily_unavailable';
 
     /**
      * Default error messages. The actual messages should be defined in child classes.
-     *
      * @link https://tools.ietf.org/html/rfc6749#section-4.1.2.1
      * @link https://tools.ietf.org/html/rfc6749#section-4.2.2.1
      */
-    const DEFAULT_MESSAGES = null;
+    public const DEFAULT_MESSAGES = null;
 
     /**
      * @var string
      */
-    private $errorCode;
+    private string $errorCode;
 
     /**
      * @var string
      */
-    private $redirectUri;
+    private string $redirectUri;
 
     /**
      * @var string|null
      */
-    private $errorUri;
+    private ?string $errorUri;
 
     /**
      * @var null|string
      */
-    private $state;
+    private ?string $state;
 
     /**
      * @var string[]
      */
-    private $httpHeaders;
+    private array $httpHeaders;
 
     /**
-     * @param string         $errorCode
-     * @param string         $redirectUri
-     * @param string|null    $state
-     * @param string|null    $errorUri
-     * @param string[]       $httpHeaders
-     * @param string[]|null  $descriptions
+     * @param string $errorCode
+     * @param string $redirectUri
+     * @param string|null $state
+     * @param string|null $errorUri
+     * @param string[] $httpHeaders
+     * @param string[]|null $descriptions
      * @param Exception|null $previous
      */
     public function __construct(
@@ -134,16 +126,15 @@ abstract class OAuthRedirectException extends OAuthServerException
         array $httpHeaders = [],
         array $descriptions = null,
         Exception $previous = null
-    )
-    {
+    ) {
         $descriptions = $descriptions === null ? static::DEFAULT_MESSAGES : $descriptions;
 
         parent::__construct($descriptions[$errorCode], 0, $previous);
 
-        $this->errorCode   = $errorCode;
+        $this->errorCode = $errorCode;
         $this->redirectUri = $redirectUri;
-        $this->state       = $state;
-        $this->errorUri    = $errorUri;
+        $this->state = $state;
+        $this->errorUri = $errorUri;
         $this->httpHeaders = $httpHeaders;
     }
 

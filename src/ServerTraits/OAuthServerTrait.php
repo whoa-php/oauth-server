@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace Whoa\OAuthServer\ServerTraits;
 
 use Whoa\OAuthServer\Contracts\ClientInterface;
+
 use function array_diff;
 use function array_key_exists;
 use function count;
@@ -34,13 +35,12 @@ trait OAuthServerTrait
 {
     /**
      * If input redirect URI is optional (client default URI will be used if possible).
-     *
      * @var bool
      */
-    private $isInputUriOptional = true;
+    private bool $isInputUriOptional = true;
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isInputUriOptional(): bool
     {
@@ -65,9 +65,7 @@ trait OAuthServerTrait
 
     /**
      * @param string[] $parameters
-     *
      * @return string|null
-     *
      * @link https://tools.ietf.org/html/rfc6749#section-4.1.1
      * @link https://tools.ietf.org/html/rfc6749#section-4.2.1
      */
@@ -78,9 +76,7 @@ trait OAuthServerTrait
 
     /**
      * @param string[] $parameters
-     *
      * @return string|null
-     *
      * @link https://tools.ietf.org/html/rfc6749#section-4.1.3
      * @link https://tools.ietf.org/html/rfc6749#section-4.3.2
      * @link https://tools.ietf.org/html/rfc6749#section-4.4.2
@@ -91,22 +87,21 @@ trait OAuthServerTrait
     }
 
     /**
-     * @param array|null           $scopes
+     * @param array|null $scopes
      * @param ClientInterface|null $client
-     *
      * @return array [bool $isScopeValid, string[]|null $scopeList, bool $isScopeModified]
      */
     protected function validateScope(ClientInterface $client, array $scopes = null): array
     {
         if (empty($scopes) === true) {
             $clientScopes = $client->getScopeIdentifiers();
-            $isModified   = $clientScopes !== $scopes;
+            $isModified = $clientScopes !== $scopes;
 
             return $client->isUseDefaultScopesOnEmptyRequest() === true ?
                 [true, $clientScopes, $isModified] : [false, $scopes, false];
         }
 
-        $extraScopes    = array_diff($scopes, $client->getScopeIdentifiers());
+        $extraScopes = array_diff($scopes, $client->getScopeIdentifiers());
         $hasExtraScopes = count($extraScopes) > 0;
         $isInvalidScope = $hasExtraScopes === true && $client->isScopeExcessAllowed() === false;
 
@@ -115,14 +110,13 @@ trait OAuthServerTrait
 
     /**
      * @param ClientInterface $client
-     * @param string|null     $redirectUri
-     *
+     * @param string|null $redirectUri
      * @return string|null
      */
     protected function selectValidRedirectUri(ClientInterface $client, string $redirectUri = null): ?string
     {
         $validUri = null;
-        $uris     = $client->getRedirectUriStrings();
+        $uris = $client->getRedirectUriStrings();
         if (empty($redirectUri) === true) {
             // if no redirect provided and it's optional we require client to have
             // exactly 1 redirect URI so we know where to redirect.

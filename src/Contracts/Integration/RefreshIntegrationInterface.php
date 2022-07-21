@@ -34,15 +34,12 @@ interface RefreshIntegrationInterface extends IntegrationInterface
 {
     /**
      * Create access token response.
-     *
      * @param ClientInterface $client
-     * @param TokenInterface  $token
-     * @param bool            $isScopeModified
-     * @param array|null      $scope
-     * @param array           $extraParameters
-     *
+     * @param TokenInterface $token
+     * @param bool $isScopeModified
+     * @param array|null $scope
+     * @param array $extraParameters
      * @return ResponseInterface
-     *
      * @link https://tools.ietf.org/html/rfc6749#section-6
      */
     public function refreshCreateAccessTokenResponse(
@@ -55,18 +52,14 @@ interface RefreshIntegrationInterface extends IntegrationInterface
 
     /**
      * Read token by its value. If no token is found returns `null`.
-     *
      * @param string $refreshValue
-     *
      * @return TokenInterface|null
-     *
      * @link https://tools.ietf.org/html/rfc6749#section-6
      */
     public function readTokenByRefreshValue(string $refreshValue): ?TokenInterface;
 
     /**
      * @param string $clientIdentifier
-     *
      * @return ClientInterface|null
      */
     public function readClientByIdentifier(string $clientIdentifier): ?ClientInterface;

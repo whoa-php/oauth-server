@@ -36,6 +36,7 @@ use Whoa\OAuthServer\GrantTraits\RefreshGrantTrait;
 use Whoa\OAuthServer\ServerTraits\OAuthServerTrait;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+
 use function assert;
 use function http_build_query;
 
@@ -44,16 +45,17 @@ use function http_build_query;
  */
 abstract class BaseAuthorizationServer implements AuthorizationServerInterface, AII, III, PII, CII, RII
 {
-    use OAuthServerTrait,
-        CodeGrantTrait, ImplicitGrantTrait, PasswordGrantTrait, ClientGrantTrait, RefreshGrantTrait;
+    use ClientGrantTrait;
+    use CodeGrantTrait;
+    use ImplicitGrantTrait;
+    use OAuthServerTrait;
+    use PasswordGrantTrait;
+    use RefreshGrantTrait;
 
     /**
      * Implements Authorization Endpoint.
-     *
      * @param array $parameters
-     *
      * @return ResponseInterface
-     *
      * @link https://tools.ietf.org/html/rfc6749#section-3.1
      * @link https://tools.ietf.org/html/rfc6749#section-4.2.1
      */
@@ -62,7 +64,7 @@ abstract class BaseAuthorizationServer implements AuthorizationServerInterface, 
     /**
      * @var null|int
      */
-    private $maxStateLength = null;
+    private ?int $maxStateLength = null;
 
     /**
      * Constructor.
@@ -134,7 +136,6 @@ abstract class BaseAuthorizationServer implements AuthorizationServerInterface, 
 
     /**
      * @param int|null $maxStateLength
-     *
      * @return self
      */
     public function setMaxStateLength(int $maxStateLength = null): self
@@ -148,7 +149,6 @@ abstract class BaseAuthorizationServer implements AuthorizationServerInterface, 
 
     /**
      * @param array $parameters
-     *
      * @return string
      */
     protected function encodeAsXWwwFormUrlencoded(array $parameters): string

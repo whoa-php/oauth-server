@@ -28,32 +28,28 @@ interface GrantTypes
 {
     /**
      * Authorization code grant type.
-     *
      * @link https://tools.ietf.org/html/rfc6749#section-1.3.1
      * @link https://tools.ietf.org/html/rfc6749#section-4.1.3
      */
-    const AUTHORIZATION_CODE = 'authorization_code';
+    public const AUTHORIZATION_CODE = 'authorization_code';
 
     /**
      * Resource owner password credentials grant type.
-     *
      * @link https://tools.ietf.org/html/rfc6749#section-1.3.3
      * @link https://tools.ietf.org/html/rfc6749#section-4.3.2
      */
-    const RESOURCE_OWNER_PASSWORD_CREDENTIALS = 'password';
+    public const RESOURCE_OWNER_PASSWORD_CREDENTIALS = 'password';
 
     /**
      * Client credentials grant type.
-     *
      * @link https://tools.ietf.org/html/rfc6749#section-1.3.4
      * @link https://tools.ietf.org/html/rfc6749#section-4.4.2
      */
-    const CLIENT_CREDENTIALS = 'client_credentials';
+    public const CLIENT_CREDENTIALS = 'client_credentials';
 
     /**
      * Refresh token.
-     *
      * @link https://tools.ietf.org/html/rfc6749#section-6
      */
-    const REFRESH_TOKEN = 'refresh_token';
+    public const REFRESH_TOKEN = 'refresh_token';
 }

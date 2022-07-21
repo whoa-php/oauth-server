@@ -29,19 +29,17 @@ interface RepositoryInterface
     /**
      * @return Client
      */
-    public function readDefaultClient();
+    public function readDefaultClient(): Client;
 
     /**
      * @param string $identifier
-     *
      * @return Client|null
      */
-    public function readClient(string $identifier);
+    public function readClient(string $identifier): ?Client;
 
     /**
      * @param string $refreshValue
-     *
-     * @return Token
+     * @return Token|null
      */
-    public function readTokenByRefreshValue(string $refreshValue);
+    public function readTokenByRefreshValue(string $refreshValue): ?Token;
 }

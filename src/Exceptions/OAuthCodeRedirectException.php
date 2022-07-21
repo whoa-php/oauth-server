@@ -31,7 +31,7 @@ class OAuthCodeRedirectException extends OAuthRedirectException
      *
      * @link https://tools.ietf.org/html/rfc6749#section-4.1.2.1
      */
-    const DEFAULT_MESSAGES = [
+    public const DEFAULT_MESSAGES = [
         self::ERROR_INVALID_REQUEST =>
             'The request is missing a required parameter, includes an invalid parameter value, ' .
             'includes a parameter more than once, or is otherwise malformed.',

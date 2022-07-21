@@ -25,6 +25,7 @@ use Whoa\OAuthServer\Contracts\ClientInterface;
 use Whoa\OAuthServer\Contracts\Integration\RefreshIntegrationInterface;
 use Whoa\OAuthServer\Exceptions\OAuthTokenBodyException;
 use Psr\Http\Message\ResponseInterface;
+
 use function array_diff;
 use function array_key_exists;
 use function explode;
@@ -32,7 +33,6 @@ use function is_string;
 
 /**
  * @package Whoa\OAuthServer
- *
  * @link    https://tools.ietf.org/html/rfc6749#section-6
  */
 trait RefreshGrantTrait
@@ -40,7 +40,7 @@ trait RefreshGrantTrait
     /**
      * @var RefreshIntegrationInterface
      */
-    private $refreshIntegration;
+    private RefreshIntegrationInterface $refreshIntegration;
 
     /**
      * @return RefreshIntegrationInterface
@@ -52,7 +52,6 @@ trait RefreshGrantTrait
 
     /**
      * @param RefreshIntegrationInterface $refreshIntegration
-     *
      * @return void
      */
     public function refreshSetIntegration(RefreshIntegrationInterface $refreshIntegration): void
@@ -62,7 +61,6 @@ trait RefreshGrantTrait
 
     /**
      * @param string[] $parameters
-     *
      * @return string|null
      */
     protected function refreshGetValue(array $parameters): ?string
@@ -72,7 +70,6 @@ trait RefreshGrantTrait
 
     /**
      * @param string[] $parameters
-     *
      * @return string[]|null
      */
     protected function refreshGetScope(array $parameters): ?array
@@ -83,14 +80,9 @@ trait RefreshGrantTrait
     }
 
     /**
-     * @param string[]             $parameters
+     * @param string[] $parameters
      * @param ClientInterface|null $determinedClient
-     *
      * @return ResponseInterface
-     *
-     * @SuppressWarnings(PHPMD.ElseExpression)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     protected function refreshIssueToken(array $parameters, ?ClientInterface $determinedClient): ResponseInterface
     {
@@ -105,12 +97,12 @@ trait RefreshGrantTrait
         $clientIdFromToken = $token->getClientIdentifier();
         if ($determinedClient === null) {
             $isClientFromToken = true;
-            $determinedClient  = $this->refreshGetIntegration()->readClientByIdentifier($clientIdFromToken);
+            $determinedClient = $this->refreshGetIntegration()->readClientByIdentifier($clientIdFromToken);
         } else {
             $isClientFromToken = false;
         }
 
-        // if client didn't provided authentication (but had to) or
+        // if client didn't provide authentication (but had to) or
         // client associated with the token do not match provided client credentials we throw an exception
         if (($isClientFromToken === true &&
                 ($determinedClient->isConfidential() === true || $determinedClient->hasCredentials() === true)) ||
@@ -124,31 +116,28 @@ trait RefreshGrantTrait
         }
 
         $isScopeModified = false;
-        $scopeList       = null;
+        $scopeList = null;
         if (($requestedScope = $this->refreshGetScope($parameters)) !== null) {
             // check requested scope is within the current one
             if (empty(array_diff($requestedScope, $token->getScopeIdentifiers())) === false) {
                 throw new OAuthTokenBodyException(OAuthTokenBodyException::ERROR_INVALID_SCOPE);
             }
             $isScopeModified = true;
-            $scopeList       = $requestedScope;
+            $scopeList = $requestedScope;
         }
 
-        $response = $this->refreshGetIntegration()->refreshCreateAccessTokenResponse(
+        return $this->refreshGetIntegration()->refreshCreateAccessTokenResponse(
             $determinedClient,
             $token,
             $isScopeModified,
             $scopeList,
             $parameters
         );
-
-        return $response;
     }
 
     /**
-     * @param array  $parameters
+     * @param array $parameters
      * @param string $name
-     *
      * @return null|string
      */
     private function refreshReadStringValue(array $parameters, string $name): ?string

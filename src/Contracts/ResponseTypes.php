@@ -28,17 +28,15 @@ interface ResponseTypes
 {
     /**
      * Authorization code request type.
-     *
      * @link https://tools.ietf.org/html/rfc6749#section-1.3.1
      * @link https://tools.ietf.org/html/rfc6749#section-4.1.1
      */
-    const AUTHORIZATION_CODE = 'code';
+    public const AUTHORIZATION_CODE = 'code';
 
     /**
      * Implicit request type.
-     *
      * @link https://tools.ietf.org/html/rfc6749#section-1.3.2
      * @link https://tools.ietf.org/html/rfc6749#section-4.2.1
      */
-    const IMPLICIT = 'token';
+    public const IMPLICIT = 'token';
 }

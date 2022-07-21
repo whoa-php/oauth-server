@@ -41,26 +41,25 @@ class RefreshTokenTest extends ServerTestCase
     /**
      * Grant type.
      */
-    const GRANT_TYPE = 'refresh_token';
+    public const GRANT_TYPE = 'refresh_token';
 
     /**
      * Client id.
      */
-    const CLIENT_ID = 'some_client';
+    public const CLIENT_ID = 'some_client';
 
     /**
      * Test successful token issue.
-     *
      * @throws Exception
      */
     public function testSuccessfulTokenIssueWithoutScopeChange()
     {
         $client = $this->createDefaultClient();
-        $token  = $this->createToken($client);
+        $token = $this->createToken($client);
         $server = new SampleServer($this->createClientRepositoryMock($client, $token));
 
-        $scope    = null;
-        $request  = $this->createTokenRequest($token->getRefreshValue(), $scope, $client->getIdentifier());
+        $scope = null;
+        $request = $this->createTokenRequest($token->getRefreshValue(), $scope, $client->getIdentifier());
         $response = $server->postCreateToken($request);
 
         $this->validateBodyResponse($response, 200, $this->getExpectedBodyToken());
@@ -68,19 +67,17 @@ class RefreshTokenTest extends ServerTestCase
 
     /**
      * Test successful token issue.
-     *
      * @link https://github.com/limoncello-php/framework/issues/49
-     *
      * @throws Exception
      */
     public function testSuccessfulTokenIssueWithoutScopeChangeEmptyScope()
     {
         $client = $this->createDefaultClient();
-        $token  = $this->createToken($client);
+        $token = $this->createToken($client);
         $server = new SampleServer($this->createClientRepositoryMock($client, $token));
 
-        $scope    = '';
-        $request  = $this->createTokenRequest($token->getRefreshValue(), $scope, $client->getIdentifier());
+        $scope = '';
+        $request = $this->createTokenRequest($token->getRefreshValue(), $scope, $client->getIdentifier());
         $response = $server->postCreateToken($request);
 
         $this->validateBodyResponse($response, 200, $this->getExpectedBodyToken());
@@ -88,17 +85,16 @@ class RefreshTokenTest extends ServerTestCase
 
     /**
      * Test successful token issue.
-     *
      * @throws Exception
      */
     public function testSuccessfulTokenIssueWithScopeChange()
     {
         $client = $this->createDefaultClient();
-        $token  = $this->createToken($client);
+        $token = $this->createToken($client);
         $server = new SampleServer($this->createClientRepositoryMock($client, $token));
 
-        $scope    = SampleServer::TEST_SCOPES[0];
-        $request  = $this->createTokenRequest($token->getRefreshValue(), $scope, $client->getIdentifier());
+        $scope = SampleServer::TEST_SCOPES[0];
+        $request = $this->createTokenRequest($token->getRefreshValue(), $scope, $client->getIdentifier());
         $response = $server->postCreateToken($request);
 
         $this->validateBodyResponse($response, 200, $this->getExpectedScopeBodyToken($scope));
@@ -106,18 +102,17 @@ class RefreshTokenTest extends ServerTestCase
 
     /**
      * Test failed token issue.
-     *
      * @throws Exception
      */
     public function testFailedTokenIssueWithScopeChange()
     {
         $client = $this->createDefaultClient();
-        $token  = $this->createToken($client);
+        $token = $this->createToken($client);
         $server = new SampleServer($this->createClientRepositoryMock($client, $token));
 
         $scope = SampleServer::TEST_SCOPES[0] . ' xxx'; // <-- additional invalid scope
 
-        $request  = $this->createTokenRequest($token->getRefreshValue(), $scope, $client->getIdentifier());
+        $request = $this->createTokenRequest($token->getRefreshValue(), $scope, $client->getIdentifier());
         $response = $server->postCreateToken($request);
 
         $errorCode = OAuthTokenBodyException::ERROR_INVALID_SCOPE;
@@ -126,19 +121,18 @@ class RefreshTokenTest extends ServerTestCase
 
     /**
      * Test with client where 'refresh grant' is disabled.
-     *
      * @throws Exception
      */
     public function testClientWithDisabledRefreshGrant()
     {
         $client = $this->createDefaultClient()->disableRefreshGrant();
-        $token  = $this->createToken($client);
+        $token = $this->createToken($client);
         $server = new SampleServer($this->createClientRepositoryMock($client, $token));
 
         $refreshValue = SampleServer::TEST_REFRESH_TOKEN;
 
-        $scope    = null;
-        $request  = $this->createTokenRequest($refreshValue, $scope, $client->getIdentifier());
+        $scope = null;
+        $request = $this->createTokenRequest($refreshValue, $scope, $client->getIdentifier());
         $response = $server->postCreateToken($request);
 
         $errorCode = OAuthTokenBodyException::ERROR_UNAUTHORIZED_CLIENT;
@@ -147,19 +141,18 @@ class RefreshTokenTest extends ServerTestCase
 
     /**
      * Test refresh token without provided client auth/id (for public client).
-     *
      * @throws Exception
      */
     public function testRefreshWithoutGivenClientId()
     {
         $client = $this->createDefaultClient()->enableRefreshGrant()->setPublic();
-        $token  = $this->createToken($client);
+        $token = $this->createToken($client);
         $server = new SampleServer($this->createClientRepositoryMock($client, $token));
 
         $refreshValue = SampleServer::TEST_REFRESH_TOKEN;
 
-        $scope    = SampleServer::TEST_SCOPES[0];
-        $request  = $this->createTokenRequest($refreshValue, $scope);
+        $scope = SampleServer::TEST_SCOPES[0];
+        $request = $this->createTokenRequest($refreshValue, $scope);
         $response = $server->postCreateToken($request);
 
         $this->validateBodyResponse($response, 200, $this->getExpectedScopeBodyToken($scope));
@@ -167,19 +160,18 @@ class RefreshTokenTest extends ServerTestCase
 
     /**
      * Test refresh token without provided client auth/id (for confidential client).
-     *
      * @throws Exception
      */
     public function testRefreshWithoutGivenClientIdForConfidentialClient()
     {
         $client = $this->createDefaultClient()->enableRefreshGrant()->setConfidential();
-        $token  = $this->createToken($client);
+        $token = $this->createToken($client);
         $server = new SampleServer($this->createClientRepositoryMock($client, $token));
 
         $refreshValue = SampleServer::TEST_REFRESH_TOKEN;
 
-        $scope    = null;
-        $request  = $this->createTokenRequest($refreshValue, $scope);
+        $scope = null;
+        $request = $this->createTokenRequest($refreshValue, $scope);
         $response = $server->postCreateToken($request);
 
         $errorCode = OAuthTokenBodyException::ERROR_INVALID_CLIENT;
@@ -188,7 +180,6 @@ class RefreshTokenTest extends ServerTestCase
 
     /**
      * Test no refresh token.
-     *
      * @throws Exception
      */
     public function testNoRefreshToken()
@@ -198,8 +189,8 @@ class RefreshTokenTest extends ServerTestCase
 
         $refreshValue = null;
 
-        $scope    = null;
-        $request  = $this->createTokenRequest($refreshValue, $scope, $client->getIdentifier());
+        $scope = null;
+        $request = $this->createTokenRequest($refreshValue, $scope, $client->getIdentifier());
         $response = $server->postCreateToken($request);
 
         $errorCode = OAuthTokenBodyException::ERROR_INVALID_REQUEST;
@@ -208,7 +199,6 @@ class RefreshTokenTest extends ServerTestCase
 
     /**
      * Test invalid refresh token.
-     *
      * @throws Exception
      */
     public function testInvalidRefreshToken()
@@ -216,10 +206,10 @@ class RefreshTokenTest extends ServerTestCase
         $client = $this->createDefaultClient();
         $server = new SampleServer($this->createClientRepositoryMockNoTokenFound($client));
 
-        $scope        = null;
+        $scope = null;
         $refreshValue = SampleServer::TEST_REFRESH_TOKEN . '_xxx'; // <-- token made invalid here
-        $request      = $this->createTokenRequest($refreshValue, $scope, $client->getIdentifier());
-        $response     = $server->postCreateToken($request);
+        $request = $this->createTokenRequest($refreshValue, $scope, $client->getIdentifier());
+        $response = $server->postCreateToken($request);
 
         $errorCode = OAuthTokenBodyException::ERROR_INVALID_GRANT;
         $this->validateBodyResponse($response, 400, $this->getExpectedBodyTokenError($errorCode));
@@ -227,25 +217,22 @@ class RefreshTokenTest extends ServerTestCase
 
     /**
      * @param string $identifier
-     *
      * @return Client
      */
-    private function createDefaultClient(string $identifier = self::CLIENT_ID)
+    private function createDefaultClient(string $identifier = self::CLIENT_ID): Client
     {
         return (new Client($identifier))->setPublic()->enableRefreshGrant();
     }
 
     /**
-     * @param ClientInterface     $client
+     * @param ClientInterface $client
      * @param TokenInterface|null $token
-     *
      * @return RepositoryInterface
      */
     private function createClientRepositoryMock(
         ClientInterface $client,
         TokenInterface $token = null
-    ): RepositoryInterface
-    {
+    ): RepositoryInterface {
         /** @var Mock $mock */
         $mock = Mockery::mock(RepositoryInterface::class);
         $mock->shouldReceive('readClient')->zeroOrMoreTimes()->with($client->getIdentifier())->andReturn($client);
@@ -260,7 +247,6 @@ class RefreshTokenTest extends ServerTestCase
 
     /**
      * @param ClientInterface $client
-     *
      * @return RepositoryInterface
      */
     private function createClientRepositoryMockNoTokenFound(ClientInterface $client): RepositoryInterface
@@ -279,8 +265,7 @@ class RefreshTokenTest extends ServerTestCase
      * @param string|null $refreshValue
      * @param string|null $scope
      * @param string|null $clientId
-     * @param array       $headers
-     *
+     * @param array $headers
      * @return ServerRequestInterface
      */
     private function createTokenRequest(
@@ -288,16 +273,13 @@ class RefreshTokenTest extends ServerTestCase
         string $scope = null,
         string $clientId = null,
         array $headers = []
-    )
-    {
-        $request = $this->createServerRequest([
-            'grant_type'    => 'refresh_token',
+    ): ServerRequestInterface {
+        return $this->createServerRequest([
+            'grant_type' => 'refresh_token',
             'refresh_token' => $refreshValue,
-            'scope'         => $scope,
-            'client_id'     => $clientId,
+            'scope' => $scope,
+            'client_id' => $clientId,
         ], null, $headers);
-
-        return $request;
     }
 
     /**
@@ -309,14 +291,12 @@ class RefreshTokenTest extends ServerTestCase
         int $expiresIn = 3600,
         string $refreshToken = SampleServer::TEST_REFRESH_TOKEN_NEW,
         string $scope = null
-    ): array
-    {
+    ): array {
         return parent::getExpectedBodyToken($token, $type, $expiresIn, $refreshToken, $scope);
     }
 
     /**
      * @param string $scope
-     *
      * @return array
      */
     protected function getExpectedScopeBodyToken(string $scope): array
@@ -332,11 +312,10 @@ class RefreshTokenTest extends ServerTestCase
 
     /**
      * @param ClientInterface $client
-     * @param null            $userIdentifier
-     * @param array           $scopeIdentifiers
-     * @param string          $tokenValue
-     * @param string          $refreshValue
-     *
+     * @param null $userIdentifier
+     * @param array $scopeIdentifiers
+     * @param string $tokenValue
+     * @param string $refreshValue
      * @return TokenInterface
      */
     private function createToken(
@@ -345,8 +324,7 @@ class RefreshTokenTest extends ServerTestCase
         array $scopeIdentifiers = SampleServer::TEST_SCOPES,
         string $tokenValue = SampleServer::TEST_TOKEN,
         string $refreshValue = SampleServer::TEST_REFRESH_TOKEN
-    ): TokenInterface
-    {
+    ): TokenInterface {
         return new Token($client->getIdentifier(), $userIdentifier, $scopeIdentifiers, $tokenValue, $refreshValue);
     }
 }

@@ -26,6 +26,7 @@ use Whoa\OAuthServer\Contracts\Integration\CodeIntegrationInterface;
 use Whoa\OAuthServer\Exceptions\OAuthCodeRedirectException;
 use Whoa\OAuthServer\Exceptions\OAuthTokenBodyException;
 use Psr\Http\Message\ResponseInterface;
+
 use function array_key_exists;
 use function explode;
 use function is_string;
@@ -33,7 +34,6 @@ use function strlen;
 
 /**
  * @package Whoa\OAuthServer
- *
  * @link    https://tools.ietf.org/html/rfc6749#section-1.3
  */
 trait CodeGrantTrait
@@ -41,11 +41,10 @@ trait CodeGrantTrait
     /**
      * @var CodeIntegrationInterface
      */
-    private $codeIntegration;
+    private CodeIntegrationInterface $codeIntegration;
 
     /**
      * @param CodeIntegrationInterface $integration
-     *
      * @return void
      */
     public function codeSetIntegration(CodeIntegrationInterface $integration): void
@@ -63,7 +62,6 @@ trait CodeGrantTrait
 
     /**
      * @param string[] $parameters
-     *
      * @return string|null
      */
     protected function codeGetClientId(array $parameters): ?string
@@ -73,7 +71,6 @@ trait CodeGrantTrait
 
     /**
      * @param string[] $parameters
-     *
      * @return string|null
      */
     protected function codeGetRedirectUri(array $parameters): ?string
@@ -83,7 +80,6 @@ trait CodeGrantTrait
 
     /**
      * @param string[] $parameters
-     *
      * @return string[]|null
      */
     protected function codeGetScope(array $parameters): ?array
@@ -95,7 +91,6 @@ trait CodeGrantTrait
 
     /**
      * @param string[] $parameters
-     *
      * @return string|null
      */
     protected function codeGetState(array $parameters): ?string
@@ -105,7 +100,6 @@ trait CodeGrantTrait
 
     /**
      * @param string[] $parameters
-     *
      * @return string|null
      */
     protected function codeGetCode(array $parameters): ?string
@@ -114,11 +108,10 @@ trait CodeGrantTrait
     }
 
     /**
-     * @param string[]        $parameters
+     * @param string[] $parameters
      * @param ClientInterface $client
-     * @param string|null     $redirectUri
-     * @param int|null        $maxStateLength
-     *
+     * @param string|null $redirectUri
+     * @param int|null $maxStateLength
      * @return ResponseInterface
      */
     protected function codeAskResourceOwnerForApproval(
@@ -126,8 +119,7 @@ trait CodeGrantTrait
         ClientInterface $client,
         string $redirectUri = null,
         int $maxStateLength = null
-    ): ResponseInterface
-    {
+    ): ResponseInterface {
         $state = $this->codeGetState($parameters);
         if ($maxStateLength !== null && strlen($state) > $maxStateLength) {
             throw new OAuthCodeRedirectException(
@@ -156,26 +148,19 @@ trait CodeGrantTrait
             );
         }
 
-        $response = $this->codeGetIntegration()->codeCreateAskResourceOwnerForApprovalResponse(
+        return $this->codeGetIntegration()->codeCreateAskResourceOwnerForApprovalResponse(
             $client,
             $redirectUri,
             $isScopeModified,
             $scopeList,
             $state
         );
-
-        return $response;
     }
 
     /**
-     * @param string[]             $parameters
+     * @param string[] $parameters
      * @param ClientInterface|null $determinedClient
-     *
      * @return ResponseInterface
-     *
-     * @SuppressWarnings(PHPMD.ElseExpression)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     protected function codeIssueToken(array $parameters, ClientInterface $determinedClient = null): ResponseInterface
     {
@@ -208,15 +193,12 @@ trait CodeGrantTrait
             }
         }
 
-        $response = $this->codeGetIntegration()->codeCreateAccessTokenResponse($code, $parameters);
-
-        return $response;
+        return $this->codeGetIntegration()->codeCreateAccessTokenResponse($code, $parameters);
     }
 
     /**
-     * @param array  $parameters
+     * @param array $parameters
      * @param string $name
-     *
      * @return null|string
      */
     private function codeReadStringValue(array $parameters, string $name): ?string

@@ -31,11 +31,8 @@ interface AuthorizationServerInterface
 {
     /**
      * Authorization Endpoint (GET method).
-     *
      * @param ServerRequestInterface $request
-     *
      * @return ResponseInterface
-     *
      * @link https://tools.ietf.org/html/rfc6749#section-3.1
      * @link https://tools.ietf.org/html/rfc6749#section-4.2.1
      */
@@ -43,11 +40,8 @@ interface AuthorizationServerInterface
 
     /**
      * Authorization Endpoint (POST method).
-     *
      * @param ServerRequestInterface $request
-     *
      * @return ResponseInterface
-     *
      * @link https://tools.ietf.org/html/rfc6749#section-3.1
      * @link https://tools.ietf.org/html/rfc6749#section-4.2.1
      */
@@ -55,11 +49,8 @@ interface AuthorizationServerInterface
 
     /**
      * Token Endpoint (POST method).
-     *
      * @param ServerRequestInterface $request
-     *
      * @return ResponseInterface
-     *
      * @link https://tools.ietf.org/html/rfc6749#section-3.2
      * @link https://tools.ietf.org/html/rfc6749#section-4.1.3
      * @link https://tools.ietf.org/html/rfc6749#section-4.3.2

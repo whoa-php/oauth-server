@@ -26,33 +26,27 @@ use Psr\Http\Message\ResponseInterface;
 
 /**
  * Implicit integration interface for server.
- *
  * @package Whoa\OAuthServer
  */
 interface ImplicitIntegrationInterface extends IntegrationInterface
 {
     /**
      * @param ClientInterface $client
-     * @param array|null      $scopes
-     *
+     * @param array|null $scopes
      * @return array [bool $isScopeValid, string[]|null $scopeList, bool $isScopeModified] Scope list `null` for
      *               invalid, string[] otherwise.
      */
     public function implicitValidateScope(ClientInterface $client, array $scopes = null): array;
 
-    /** @noinspection PhpTooManyParametersInspection
+    /**
      * @param ClientInterface $client
-     * @param string|null     $redirectUri
-     * @param bool            $isScopeModified
-     * @param string[]|null   $scopeList
-     * @param string|null     $state
-     * @param array           $extraParameters
-     *
+     * @param string|null $redirectUri
+     * @param bool $isScopeModified
+     * @param string[]|null $scopeList
+     * @param string|null $state
+     * @param array $extraParameters
      * @return ResponseInterface
-     *
      * @link https://tools.ietf.org/html/rfc6749#section-4.2.2
-     *
-     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
     public function implicitCreateAskResourceOwnerForApprovalResponse(
         ClientInterface $client,

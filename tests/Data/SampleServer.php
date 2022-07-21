@@ -35,6 +35,7 @@ use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Diactoros\Response\JsonResponse;
 use Zend\Diactoros\Response\RedirectResponse;
 use Zend\Diactoros\Uri;
+
 use function assert;
 use function array_filter;
 use function array_key_exists;
@@ -46,62 +47,58 @@ use function substr;
 
 /**
  * @package Whoa\Tests\OAuthServer
- *
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
 class SampleServer extends BaseAuthorizationServer
 {
     /** Test data */
-    const TEST_USER_NAME = 'john@dow.foo';
+    public const TEST_USER_NAME = 'john@dow.foo';
 
     /** Test data */
-    const TEST_PASSWORD = 'password';
+    public const TEST_PASSWORD = 'password';
 
     /** Test data */
-    const TEST_AUTH_CODE = '5ebe2294ecd0e0f08eab7690d2a6ee69';
+    public const TEST_AUTH_CODE = '5ebe2294ecd0e0f08eab7690d2a6ee69';
 
     /** Test data */
-    const TEST_USED_AUTH_CODE = 'c7f7a58918e790e28827a4e272462914';
+    public const TEST_USED_AUTH_CODE = 'c7f7a58918e790e28827a4e272462914';
 
     /** Test data */
-    const TEST_TOKEN = '4142011b2689166ce7760644a0b5f8d0';
+    public const TEST_TOKEN = '4142011b2689166ce7760644a0b5f8d0';
 
     /** Test data */
-    const TEST_REFRESH_TOKEN = 'e57941dbe1246fe97a4ffc16e85b5df9';
+    public const TEST_REFRESH_TOKEN = 'e57941dbe1246fe97a4ffc16e85b5df9';
 
     /** Test data */
-    const TEST_TOKEN_NEW = '4142011b2689166ce7760644a0b5f8d0_new';
+    public const TEST_TOKEN_NEW = '4142011b2689166ce7760644a0b5f8d0_new';
 
     /** Test data */
-    const TEST_REFRESH_TOKEN_NEW = 'e57941dbe1246fe97a4ffc16e85b5df9_new';
+    public const TEST_REFRESH_TOKEN_NEW = 'e57941dbe1246fe97a4ffc16e85b5df9_new';
 
     /** Test data */
-    const TEST_SCOPES = ['scope1', 'scope2'];
+    public const TEST_SCOPES = ['scope1', 'scope2'];
 
     /** Test data */
-    const TEST_TOKEN_TYPE = 'bearer';
+    public const TEST_TOKEN_TYPE = 'bearer';
 
     /** Test data */
-    const TEST_TOKEN_EXPIRES_IN = 3600;
+    public const TEST_TOKEN_EXPIRES_IN = 3600;
 
     /** Test data */
-    const TEST_UNSUPPORTED_GRANT_TYPE_ERROR_URI = 'http://example.com/error123';
+    public const TEST_UNSUPPORTED_GRANT_TYPE_ERROR_URI = 'http://example.com/error123';
 
     /** Test data */
-    const TEST_ACCESS_DENIED_ERROR_URI = 'http://example.com/error456';
+    public const TEST_ACCESS_DENIED_ERROR_URI = 'http://example.com/error456';
 
     /** Test data */
-    const TEST_CLIENT_ID = 'some_client_id';
+    public const TEST_CLIENT_ID = 'some_client_id';
 
     /** Test data */
-    const TEST_CLIENT_REDIRECT_URI = 'https://client.foo/redirect';
+    public const TEST_CLIENT_REDIRECT_URI = 'https://client.foo/redirect';
 
     /**
      * @var RepositoryInterface
      */
-    private $repository;
+    private RepositoryInterface $repository;
 
     /**
      * @param RepositoryInterface $repository
@@ -115,14 +112,12 @@ class SampleServer extends BaseAuthorizationServer
 
     /**
      * @inheritdoc
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     protected function createAuthorization(array $parameters): ResponseInterface
     {
         try {
-            $client       = null;
-            $redirectUri  = null;
+            $client = null;
+            $redirectUri = null;
             $responseType = $this->getResponseType($parameters);
             switch ($responseType) {
                 case ResponseTypes::AUTHORIZATION_CODE:
@@ -169,7 +164,7 @@ class SampleServer extends BaseAuthorizationServer
     public function postCreateToken(ServerRequestInterface $request): ResponseInterface
     {
         try {
-            $parameters       = $request->getParsedBody();
+            $parameters = $request->getParsedBody();
             $determinedClient = $this->determineClient($request, $parameters);
 
             switch ($this->getGrantType($parameters)) {
@@ -198,7 +193,7 @@ class SampleServer extends BaseAuthorizationServer
         return $response;
     }
 
-    /** @noinspection PhpTooManyParametersInspection
+    /**
      * @inheritdoc
      */
     public function codeCreateAskResourceOwnerForApprovalResponse(
@@ -208,8 +203,7 @@ class SampleServer extends BaseAuthorizationServer
         array $scopeList = null,
         string $state = null,
         array $extraParameters = []
-    ): ResponseInterface
-    {
+    ): ResponseInterface {
         // This method should return some kind of HTML response with a list of scopes asking resource owner for
         // approval. If the scope is approved the controller should create and save authentication code and
         // make redirect with this code to client.
@@ -221,9 +215,7 @@ class SampleServer extends BaseAuthorizationServer
         $code = (new AuthorizationCode(static::TEST_AUTH_CODE, $client->getIdentifier(), $redirectUri, $scopeList));
         $isScopeModified === true ? $code->setScopeModified() : $code->setScopeUnmodified();
 
-        $response = $this->createRedirectCodeResponse($client, $code, $state);
-
-        return $response;
+        return $this->createRedirectCodeResponse($client, $code, $state);
     }
 
     /**
@@ -250,19 +242,16 @@ class SampleServer extends BaseAuthorizationServer
     public function codeCreateAccessTokenResponse(
         AuthorizationCodeInterface $code,
         array $extraParameters = []
-    ): ResponseInterface
-    {
-        $token        = static::TEST_TOKEN;
-        $type         = static::TEST_TOKEN_TYPE;
-        $expiresIn    = static::TEST_TOKEN_EXPIRES_IN;
+    ): ResponseInterface {
+        $token = static::TEST_TOKEN;
+        $type = static::TEST_TOKEN_TYPE;
+        $expiresIn = static::TEST_TOKEN_EXPIRES_IN;
         $refreshToken = static::TEST_REFRESH_TOKEN;
-        $scopeList    = $code->isScopeModified() === true ? $code->getScopeIdentifiers() : null;
+        $scopeList = $code->isScopeModified() === true ? $code->getScopeIdentifiers() : null;
 
         // let's pretend we've saved the token parameters for the user
 
-        $response = $this->createBodyTokenResponse($token, $type, $expiresIn, $refreshToken, $scopeList);
-
-        return $response;
+        return $this->createBodyTokenResponse($token, $type, $expiresIn, $refreshToken, $scopeList);
     }
 
     /**
@@ -273,7 +262,7 @@ class SampleServer extends BaseAuthorizationServer
         // pretend we actually revoke all related tokens
     }
 
-    /** @noinspection PhpTooManyParametersInspection
+    /**
      * @inheritdoc
      */
     public function implicitCreateAskResourceOwnerForApprovalResponse(
@@ -283,8 +272,7 @@ class SampleServer extends BaseAuthorizationServer
         array $scopeList = null,
         string $state = null,
         array $extraParameters = []
-    ): ResponseInterface
-    {
+    ): ResponseInterface {
         // This method should return some kind of HTML response with a list of scopes asking resource owner for
         // approval. If the scope is approved the controller should create and save token and return it.
         // As this logic is app specific it's not a part of server code.
@@ -293,17 +281,15 @@ class SampleServer extends BaseAuthorizationServer
 
         $redirectUri = $this->selectValidRedirectUri($client, $redirectUri);
 
-        $token     = static::TEST_TOKEN;
-        $type      = static::TEST_TOKEN_TYPE;
+        $token = static::TEST_TOKEN;
+        $type = static::TEST_TOKEN_TYPE;
         $expiresIn = static::TEST_TOKEN_EXPIRES_IN;
-        $scopes    = $isScopeModified === true ? $scopeList : null;
+        $scopes = $isScopeModified === true ? $scopeList : null;
 
-        $response = $this->createRedirectTokenResponse($redirectUri, $token, $type, $expiresIn, $scopes, $state);
-
-        return $response;
+        return $this->createRedirectTokenResponse($redirectUri, $token, $type, $expiresIn, $scopes, $state);
     }
 
-    /** @noinspection PhpTooManyParametersInspection
+    /**
      * @inheritdoc
      */
     public function passValidateCredentialsAndCreateAccessTokenResponse(
@@ -313,8 +299,7 @@ class SampleServer extends BaseAuthorizationServer
         bool $isScopeModified = false,
         array $scope = null,
         array $extraParameters = []
-    ): ResponseInterface
-    {
+    ): ResponseInterface {
         // let's pretend we've made a query to our database and checked the credentials
         $areCredentialsValid = $userName === static::TEST_USER_NAME && $password === static::TEST_PASSWORD;
 
@@ -322,16 +307,14 @@ class SampleServer extends BaseAuthorizationServer
             throw new OAuthTokenBodyException(OAuthTokenBodyException::ERROR_INVALID_GRANT);
         }
 
-        $token        = static::TEST_TOKEN;
-        $type         = static::TEST_TOKEN_TYPE;
-        $expiresIn    = static::TEST_TOKEN_EXPIRES_IN;
+        $token = static::TEST_TOKEN;
+        $type = static::TEST_TOKEN_TYPE;
+        $expiresIn = static::TEST_TOKEN_EXPIRES_IN;
         $refreshToken = static::TEST_REFRESH_TOKEN;
 
         // let's pretend we've saved the token parameters for the user
 
-        $response = $this->createBodyTokenResponse($token, $type, $expiresIn, $refreshToken);
-
-        return $response;
+        return $this->createBodyTokenResponse($token, $type, $expiresIn, $refreshToken);
     }
 
     /**
@@ -350,17 +333,14 @@ class SampleServer extends BaseAuthorizationServer
         bool $isScopeModified,
         array $scope = null,
         array $extraParameters = []
-    ): ResponseInterface
-    {
-        $token     = static::TEST_TOKEN;
-        $type      = static::TEST_TOKEN_TYPE;
+    ): ResponseInterface {
+        $token = static::TEST_TOKEN;
+        $type = static::TEST_TOKEN_TYPE;
         $expiresIn = static::TEST_TOKEN_EXPIRES_IN;
 
         // let's pretend we've saved the token parameters for the client
 
-        $response = $this->createBodyTokenResponse($token, $type, $expiresIn);
-
-        return $response;
+        return $this->createBodyTokenResponse($token, $type, $expiresIn);
     }
 
     /**
@@ -372,18 +352,15 @@ class SampleServer extends BaseAuthorizationServer
         bool $isScopeModified,
         array $scope = null,
         array $extraParameters = []
-    ): ResponseInterface
-    {
-        $token     = static::TEST_TOKEN_NEW;
-        $type      = static::TEST_TOKEN_TYPE;
+    ): ResponseInterface {
+        $token = static::TEST_TOKEN_NEW;
+        $type = static::TEST_TOKEN_TYPE;
         $expiresIn = static::TEST_TOKEN_EXPIRES_IN;
-        $refresh   = static::TEST_REFRESH_TOKEN_NEW;
+        $refresh = static::TEST_REFRESH_TOKEN_NEW;
 
         // let's pretend we've updated and saved token parameters and send a new set to client
 
-        $response = $this->createBodyTokenResponse($token, $type, $expiresIn, $refresh, $scope);
-
-        return $response;
+        return $this->createBodyTokenResponse($token, $type, $expiresIn, $refresh, $scope);
     }
 
     /**
@@ -404,19 +381,13 @@ class SampleServer extends BaseAuthorizationServer
 
     /**
      * @param ServerRequestInterface $request
-     * @param array                  $parameters
-     *
+     * @param array $parameters
      * @return ClientInterface|null
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     *
      * It does not authenticate clients in all cases. It's allowed to provide only client identifier without
      * client credentials. In that case if client is not confidential and no credentials have been issued to the client
      * it would be OK.
-     *
-     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
-    private function determineClient(ServerRequestInterface $request, array $parameters)
+    private function determineClient(ServerRequestInterface $request, array $parameters): ?ClientInterface
     {
         // As an example let's implement `Basic` client authorization
 
@@ -429,9 +400,9 @@ class SampleServer extends BaseAuthorizationServer
         // @link https://tools.ietf.org/html/rfc6749#section-3.2.1
 
         // try to parse `Authorization` header for client ID and credentials
-        $clientId          = null;
+        $clientId = null;
         $clientCredentials = null;
-        $errorHeaders      = ['WWW-Authenticate' => 'Basic realm="OAuth"'];
+        $errorHeaders = ['WWW-Authenticate' => 'Basic realm="OAuth"'];
         if (empty($headerArray = $request->getHeader('Authorization')) === false) {
             $errorCode = OAuthTokenBodyException::ERROR_INVALID_CLIENT;
             if (empty($authHeader = $headerArray[0]) === true ||
@@ -450,7 +421,7 @@ class SampleServer extends BaseAuthorizationServer
                     $clientId = $idAndCredentials[0];
                     break;
                 case 2:
-                    $clientId          = $idAndCredentials[0];
+                    $clientId = $idAndCredentials[0];
                     $clientCredentials = $idAndCredentials[1];
                     break;
                 default:
@@ -487,11 +458,9 @@ class SampleServer extends BaseAuthorizationServer
                 if (password_verify($clientCredentials, $client->getCredentials()) === false) {
                     throw new OAuthTokenBodyException($errorCode, null, 401, $errorHeaders);
                 }
-            } else {
+            } elseif ($client->isConfidential() === true || $client->hasCredentials() === true) {
                 // no password provided
-                if ($client->isConfidential() === true || $client->hasCredentials() === true) {
-                    throw new OAuthTokenBodyException($errorCode, null, 401, $errorHeaders);
-                }
+                throw new OAuthTokenBodyException($errorCode, null, 401, $errorHeaders);
             }
         }
 
@@ -501,12 +470,11 @@ class SampleServer extends BaseAuthorizationServer
     /**
      * @param string|null $clientId
      * @param string|null $redirectFromQuery
-     *
      * @return array [client|null, uri|null]
      */
-    private function getValidClientAndRedirectUri(string $clientId = null, string $redirectFromQuery = null)
+    private function getValidClientAndRedirectUri(string $clientId = null, string $redirectFromQuery = null): array
     {
-        $client           = null;
+        $client = null;
         $validRedirectUri = null;
 
         if ($clientId !== null && ($client = $this->getRepository()->readClient($clientId)) !== null) {
@@ -517,40 +485,35 @@ class SampleServer extends BaseAuthorizationServer
     }
 
     /**
-     * @param ClientInterface            $client
+     * @param ClientInterface $client
      * @param AuthorizationCodeInterface $code
-     * @param string|null                $state
-     *
+     * @param string|null $state
      * @return ResponseInterface
      */
     private function createRedirectCodeResponse(
         ClientInterface $client,
         AuthorizationCodeInterface $code,
         string $state = null
-    ): ResponseInterface
-    {
+    ): ResponseInterface {
         // for authorization code format @link https://tools.ietf.org/html/rfc6749#section-4.1.2
         $parameters = $this->filterNulls([
-            'code'  => $code->getCode(),
+            'code' => $code->getCode(),
             'state' => $state,
         ]);
 
         $fragment = $this->encodeAsXWwwFormUrlencoded($parameters);
 
         $redirectUri = $this->selectValidRedirectUri($client, $code->getRedirectUriString());
-        $response    = new RedirectResponse((new Uri($redirectUri))->withFragment($fragment));
-
-        return $response;
+        return new RedirectResponse((new Uri($redirectUri))->withFragment($fragment));
     }
 
-    /** @noinspection PhpTooManyParametersInspection
-     * @param string        $redirectUri
-     * @param string        $token
-     * @param string        $type
-     * @param int           $expiresIn
+    /**
+     * @param string $redirectUri
+     * @param string $token
+     * @param string $type
+     * @param int $expiresIn
      * @param string[]|null $scopeIdentifiers
-     * @param string|null   $state
-     *
+     * @param string|null $state
      * @return ResponseInterface
      */
     private function createRedirectTokenResponse(
@@ -560,8 +523,7 @@ class SampleServer extends BaseAuthorizationServer
         int $expiresIn,
         array $scopeIdentifiers = null,
         string $state = null
-    ): ResponseInterface
-    {
+    ): ResponseInterface {
         // for access token format @link https://tools.ietf.org/html/rfc6749#section-4.2.2
         //
         // Also from #4.2.2
@@ -571,29 +533,26 @@ class SampleServer extends BaseAuthorizationServer
         // the client than a 3xx redirection response -- for example, returning an HTML page that includes a
         // 'continue' button with an action linked to the redirection URI.
 
-        $scope      = $scopeIdentifiers === null ? null : implode(' ', $scopeIdentifiers);
+        $scope = $scopeIdentifiers === null ? null : implode(' ', $scopeIdentifiers);
         $parameters = $this->filterNulls([
             'access_token' => $token,
-            'token_type'   => $type,
-            'expires_in'   => $expiresIn,
-            'scope'        => $scope,
-            'state'        => $state,
+            'token_type' => $type,
+            'expires_in' => $expiresIn,
+            'scope' => $scope,
+            'state' => $state,
         ]);
 
         $fragment = $this->encodeAsXWwwFormUrlencoded($parameters);
 
-        $response = new RedirectResponse((new Uri($redirectUri))->withFragment($fragment));
-
-        return $response;
+        return new RedirectResponse((new Uri($redirectUri))->withFragment($fragment));
     }
 
     /**
-     * @param string        $token
-     * @param string        $type
-     * @param int           $expiresIn
-     * @param string|null   $refreshToken
+     * @param string $token
+     * @param string $type
+     * @param int $expiresIn
+     * @param string|null $refreshToken
      * @param string[]|null $scopeList
-     *
      * @return ResponseInterface
      */
     private function createBodyTokenResponse(
@@ -602,66 +561,55 @@ class SampleServer extends BaseAuthorizationServer
         int $expiresIn,
         string $refreshToken = null,
         array $scopeList = null
-    ): ResponseInterface
-    {
+    ): ResponseInterface {
         // for access token format @link https://tools.ietf.org/html/rfc6749#section-5.1
-        $scope      = $scopeList === null ? null : implode(' ', $scopeList);
+        $scope = $scopeList === null ? null : implode(' ', $scopeList);
         $parameters = $this->filterNulls([
-            'access_token'  => $token,
-            'token_type'    => $type,
-            'expires_in'    => $expiresIn,
+            'access_token' => $token,
+            'token_type' => $type,
+            'expires_in' => $expiresIn,
             'refresh_token' => $refreshToken,
-            'scope'         => $scope,
+            'scope' => $scope,
         ]);
 
-        $response = new JsonResponse($parameters, 200, [
+        return new JsonResponse($parameters, 200, [
             'Cache-Control' => 'no-store',
-            'Pragma'        => 'no-cache'
+            'Pragma' => 'no-cache'
         ]);
-
-        return $response;
     }
 
     /**
      * @param OAuthRedirectException $exception
-     *
      * @return ResponseInterface
      */
     private function createRedirectErrorResponse(OAuthRedirectException $exception): ResponseInterface
     {
         $parameters = $this->filterNulls([
-            'error'             => $exception->getErrorCode(),
+            'error' => $exception->getErrorCode(),
             'error_description' => $exception->getErrorDescription(),
-            'error_uri'         => $exception->getErrorUri(),
-            'state'             => $exception->getState(),
+            'error_uri' => $exception->getErrorUri(),
+            'state' => $exception->getState(),
         ]);
-        $fragment   = $this->encodeAsXWwwFormUrlencoded($parameters);
-        $uri        = (new Uri($exception->getRedirectUri()))->withFragment($fragment);
+        $fragment = $this->encodeAsXWwwFormUrlencoded($parameters);
+        $uri = (new Uri($exception->getRedirectUri()))->withFragment($fragment);
 
-        $response = new RedirectResponse($uri, 302, $exception->getHttpHeaders());
-
-        return $response;
+        return new RedirectResponse($uri, 302, $exception->getHttpHeaders());
     }
 
     /**
      * @param OAuthTokenBodyException $exception
-     *
      * @return ResponseInterface
-     *
      * @link https://tools.ietf.org/html/rfc6749#section-5.2
      */
     private function createBodyErrorResponse(OAuthTokenBodyException $exception): ResponseInterface
     {
         $array = $this->filterNulls([
-            'error'             => $exception->getErrorCode(),
+            'error' => $exception->getErrorCode(),
             'error_description' => $exception->getErrorDescription(),
-            'error_uri'         => $this->getBodyErrorUri($exception),
+            'error_uri' => $this->getBodyErrorUri($exception),
         ]);
 
-        $response =
-            new JsonResponse($array, $exception->getHttpCode(), $exception->getHttpHeaders());
-
-        return $response;
+        return new JsonResponse($array, $exception->getHttpCode(), $exception->getHttpHeaders());
     }
 
     /**
@@ -682,7 +630,6 @@ class SampleServer extends BaseAuthorizationServer
 
     /**
      * @param RepositoryInterface $repository
-     *
      * @return SampleServer
      */
     private function setRepository(RepositoryInterface $repository): SampleServer
@@ -694,7 +641,6 @@ class SampleServer extends BaseAuthorizationServer
 
     /**
      * @param array $array
-     *
      * @return array
      */
     private function filterNulls(array $array): array
@@ -706,18 +652,15 @@ class SampleServer extends BaseAuthorizationServer
 
     /**
      * @param OAuthTokenBodyException $exception
-     *
      * @return null|string
      */
-    protected function getBodyErrorUri(OAuthTokenBodyException $exception)
+    protected function getBodyErrorUri(OAuthTokenBodyException $exception): ?string
     {
         $uri = $exception->getErrorUri();
 
         if ($uri === null) {
-            switch ($exception->getErrorCode()) {
-                case OAuthTokenBodyException::ERROR_UNSUPPORTED_GRANT_TYPE:
-                    $uri = static::TEST_UNSUPPORTED_GRANT_TYPE_ERROR_URI;
-                    break;
+            if ($exception->getErrorCode() == OAuthTokenBodyException::ERROR_UNSUPPORTED_GRANT_TYPE) {
+                $uri = static::TEST_UNSUPPORTED_GRANT_TYPE_ERROR_URI;
             }
         }
 
@@ -726,18 +669,15 @@ class SampleServer extends BaseAuthorizationServer
 
     /**
      * @param OAuthRedirectException $exception
-     *
      * @return null|string
      */
-    protected function getRedirectErrorUri(OAuthRedirectException $exception)
+    protected function getRedirectErrorUri(OAuthRedirectException $exception): ?string
     {
         $uri = $exception->getErrorUri();
 
         if ($uri === null) {
-            switch ($exception->getErrorCode()) {
-                case OAuthRedirectException::ERROR_ACCESS_DENIED:
-                    $uri = static::TEST_ACCESS_DENIED_ERROR_URI;
-                    break;
+            if ($exception->getErrorCode() == OAuthRedirectException::ERROR_ACCESS_DENIED) {
+                $uri = static::TEST_ACCESS_DENIED_ERROR_URI;
             }
         }
 

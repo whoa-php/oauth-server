@@ -27,33 +27,27 @@ use Psr\Http\Message\ResponseInterface;
 
 /**
  * Authorization code integration interface for server.
- *
  * @package Whoa\OAuthServer
  */
 interface CodeIntegrationInterface extends IntegrationInterface
 {
     /**
      * @param ClientInterface $client
-     * @param array|null      $scopes
-     *
+     * @param array|null $scopes
      * @return array [bool $isScopeValid, string[]|null $scopeList, bool $isScopeModified] Scope list `null` for
      *               invalid, string[] otherwise.
      */
     public function codeValidateScope(ClientInterface $client, array $scopes = null): array;
 
-    /** @noinspection PhpTooManyParametersInspection
+    /**
      * @param ClientInterface $client
-     * @param string|null     $redirectUri
-     * @param bool            $isScopeModified
-     * @param string[]|null   $scopeList
-     * @param string|null     $state
-     * @param array           $extraParameters
-     *
+     * @param string|null $redirectUri
+     * @param bool $isScopeModified
+     * @param string[]|null $scopeList
+     * @param string|null $state
+     * @param array $extraParameters
      * @return ResponseInterface
-     *
      * @link https://tools.ietf.org/html/rfc6749#section-4.1.1
-     *
-     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
     public function codeCreateAskResourceOwnerForApprovalResponse(
         ClientInterface $client,
@@ -66,28 +60,22 @@ interface CodeIntegrationInterface extends IntegrationInterface
 
     /**
      * @param string $code
-     *
      * @return AuthorizationCodeInterface|null
      */
     public function codeReadAuthenticationCode(string $code): ?AuthorizationCodeInterface;
 
     /**
      * Revoke all tokens issued based on the input authorization code.
-     *
      * @param AuthorizationCodeInterface $code
-     *
      * @return void
-     *
      * @link https://tools.ietf.org/html/rfc6749#section-10.5
      */
     public function codeRevokeTokens(AuthorizationCodeInterface $code): void;
 
     /**
      * @param AuthorizationCodeInterface $code
-     * @param array                      $extraParameters
-     *
+     * @param array $extraParameters
      * @return ResponseInterface
-     *
      * @link https://tools.ietf.org/html/rfc6749#section-4.1.4
      */
     public function codeCreateAccessTokenResponse(

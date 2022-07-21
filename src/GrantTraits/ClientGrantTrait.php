@@ -25,13 +25,13 @@ use Whoa\OAuthServer\Contracts\ClientInterface;
 use Whoa\OAuthServer\Contracts\Integration\ClientIntegrationInterface;
 use Whoa\OAuthServer\Exceptions\OAuthTokenBodyException;
 use Psr\Http\Message\ResponseInterface;
+
 use function array_key_exists;
 use function explode;
 use function is_string;
 
 /**
  * @package Whoa\OAuthServer
- *
  * @link    https://tools.ietf.org/html/rfc6749#section-1.3
  * @link    https://tools.ietf.org/html/rfc6749#section-4.4
  */
@@ -40,7 +40,7 @@ trait ClientGrantTrait
     /**
      * @var ClientIntegrationInterface
      */
-    private $clientIntegration;
+    private ClientIntegrationInterface $clientIntegration;
 
     /**
      * @return ClientIntegrationInterface
@@ -52,7 +52,6 @@ trait ClientGrantTrait
 
     /**
      * @param ClientIntegrationInterface $clientIntegration
-     *
      * @return void
      */
     public function clientSetIntegration(ClientIntegrationInterface $clientIntegration): void
@@ -62,7 +61,6 @@ trait ClientGrantTrait
 
     /**
      * @param string[] $parameters
-     *
      * @return string[]|null
      */
     protected function clientGetScope(array $parameters): ?array
@@ -73,9 +71,8 @@ trait ClientGrantTrait
     }
 
     /**
-     * @param string[]        $parameters
+     * @param string[] $parameters
      * @param ClientInterface $determinedClient
-     *
      * @return ResponseInterface
      */
     protected function clientIssueToken(array $parameters, ClientInterface $determinedClient): ResponseInterface
@@ -91,20 +88,17 @@ trait ClientGrantTrait
             throw new OAuthTokenBodyException(OAuthTokenBodyException::ERROR_INVALID_SCOPE);
         }
 
-        $response = $this->clientGetIntegration()->clientCreateAccessTokenResponse(
+        return $this->clientGetIntegration()->clientCreateAccessTokenResponse(
             $determinedClient,
             $isScopeModified,
             $scopeList,
             $parameters
         );
-
-        return $response;
     }
 
     /**
-     * @param array  $parameters
+     * @param array $parameters
      * @param string $name
-     *
      * @return null|string
      */
     private function clientReadStringValue(array $parameters, string $name): ?string

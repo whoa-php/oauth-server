@@ -30,52 +30,45 @@ class OAuthTokenBodyException extends OAuthServerException
 {
     /**
      * Error code.
-     *
      * @link https://tools.ietf.org/html/rfc6749#section-5.2
      */
-    const ERROR_INVALID_REQUEST = 'invalid_request';
+    public const ERROR_INVALID_REQUEST = 'invalid_request';
 
     /**
      * Error code.
-     *
      * @link https://tools.ietf.org/html/rfc6749#section-5.2
      */
-    const ERROR_INVALID_CLIENT = 'invalid_client';
+    public const ERROR_INVALID_CLIENT = 'invalid_client';
 
     /**
      * Error code.
-     *
      * @link https://tools.ietf.org/html/rfc6749#section-5.2
      */
-    const ERROR_INVALID_GRANT = 'invalid_grant';
+    public const ERROR_INVALID_GRANT = 'invalid_grant';
 
     /**
      * Error code.
-     *
      * @link https://tools.ietf.org/html/rfc6749#section-5.2
      */
-    const ERROR_UNAUTHORIZED_CLIENT = 'unauthorized_client';
+    public const ERROR_UNAUTHORIZED_CLIENT = 'unauthorized_client';
 
     /**
      * Error code.
-     *
      * @link https://tools.ietf.org/html/rfc6749#section-5.2
      */
-    const ERROR_UNSUPPORTED_GRANT_TYPE = 'unsupported_grant_type';
+    public const ERROR_UNSUPPORTED_GRANT_TYPE = 'unsupported_grant_type';
 
     /**
      * Error code.
-     *
      * @link https://tools.ietf.org/html/rfc6749#section-5.2
      */
-    const ERROR_INVALID_SCOPE = 'invalid_scope';
+    public const ERROR_INVALID_SCOPE = 'invalid_scope';
 
     /**
      * Default error messages.
-     *
      * @link https://tools.ietf.org/html/rfc6749#section-5.2
      */
-    const DEFAULT_MESSAGES = [
+    public const DEFAULT_MESSAGES = [
         self::ERROR_INVALID_REQUEST => 'The request is missing a required parameter, includes an unsupported ' .
             'parameter value (other than grant type), repeats a parameter, includes multiple credentials, utilizes ' .
             'more than one mechanism for authenticating the client, or is otherwise malformed.',
@@ -100,29 +93,29 @@ class OAuthTokenBodyException extends OAuthServerException
     /**
      * @var string
      */
-    private $errorCode;
+    private string $errorCode;
 
     /**
      * @var int
      */
-    private $httpCode;
+    private int $httpCode;
 
     /**
      * @var string[]
      */
-    private $httpHeaders;
+    private array $httpHeaders;
 
     /**
      * @var string|null
      */
-    private $errorUri;
+    private ?string $errorUri;
 
     /**
-     * @param string         $errorCode
-     * @param string|null    $errorUri
-     * @param int            $httpCode
-     * @param string[]       $httpHeaders
-     * @param string[]|null  $descriptions
+     * @param string $errorCode
+     * @param string|null $errorUri
+     * @param int $httpCode
+     * @param string[] $httpHeaders
+     * @param string[]|null $descriptions
      * @param Exception|null $previous
      */
     public function __construct(
@@ -132,8 +125,7 @@ class OAuthTokenBodyException extends OAuthServerException
         array $httpHeaders = [],
         array $descriptions = null,
         Exception $previous = null
-    )
-    {
+    ) {
         $descriptions = $descriptions === null ? self::DEFAULT_MESSAGES : $descriptions;
 
         parent::__construct($descriptions[$errorCode], 0, $previous);
@@ -144,12 +136,12 @@ class OAuthTokenBodyException extends OAuthServerException
         // in response as well as the "Pragma" response header field with a value of "no-cache".
         $cacheHeaders = [
             'Cache-Control' => 'no-store',
-            'Pragma'        => 'no-cache'
+            'Pragma' => 'no-cache'
         ];
 
-        $this->errorCode   = $errorCode;
-        $this->errorUri    = $errorUri;
-        $this->httpCode    = $httpCode;
+        $this->errorCode = $errorCode;
+        $this->errorUri = $errorUri;
+        $this->httpCode = $httpCode;
         $this->httpHeaders = $httpHeaders + $cacheHeaders;
     }
 

@@ -31,7 +31,7 @@ class Token implements TokenInterface
     /**
      * @var string
      */
-    private $clientIdentifier;
+    private string $clientIdentifier;
 
     /**
      * @var string|int|null
@@ -41,26 +41,25 @@ class Token implements TokenInterface
     /**
      * @var string[]
      */
-    private $scopeIdentifiers;
+    private array $scopeIdentifiers;
 
     /**
      * @var string|null
      */
-    private $tokenValue;
+    private ?string $tokenValue;
 
     /**
      * @var string|null
      */
-    private $refreshValue;
+    private ?string $refreshValue;
 
     /**
      * Token constructor.
-     *
-     * @param string          $clientIdentifier
+     * @param string $clientIdentifier
      * @param int|string|null $userIdentifier
-     * @param string[]        $scopeIdentifiers
-     * @param null|string     $tokenValue
-     * @param null|string     $refreshValue
+     * @param string[] $scopeIdentifiers
+     * @param null|string $tokenValue
+     * @param null|string $refreshValue
      */
     public function __construct(
         string $clientIdentifier,
@@ -68,13 +67,12 @@ class Token implements TokenInterface
         array $scopeIdentifiers = [],
         string $tokenValue = null,
         string $refreshValue = null
-    )
-    {
+    ) {
         $this->clientIdentifier = $clientIdentifier;
-        $this->userIdentifier   = $userIdentifier;
+        $this->userIdentifier = $userIdentifier;
         $this->scopeIdentifiers = $scopeIdentifiers;
-        $this->tokenValue       = $tokenValue;
-        $this->refreshValue     = $refreshValue;
+        $this->tokenValue = $tokenValue;
+        $this->refreshValue = $refreshValue;
     }
 
 

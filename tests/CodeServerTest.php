@@ -34,47 +34,44 @@ use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * @package Whoa\Tests\OAuthServer
- *
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class CodeServerTest extends ServerTestCase
 {
     /**
      * Client id.
      */
-    const CLIENT_ID = 'some_client_id';
+    public const CLIENT_ID = 'some_client_id';
 
     /**
      * Client id.
      */
-    const CLIENT_PASSWORD = 'secret';
+    public const CLIENT_PASSWORD = 'secret';
 
     /**
      * Client default scope.
      */
-    const CLIENT_DEFAULT_SCOPE = 'some scope';
+    public const CLIENT_DEFAULT_SCOPE = 'some scope';
 
     /**
      * Client redirect URI.
      */
-    const REDIRECT_URI_1 = SampleServer::TEST_CLIENT_REDIRECT_URI;
+    public const REDIRECT_URI_1 = SampleServer::TEST_CLIENT_REDIRECT_URI;
 
     /**
      * Client redirect URI.
      */
-    const REDIRECT_URI_2 = 'http://example.foo/redirect2?param2=value2';
+    public const REDIRECT_URI_2 = 'http://example.foo/redirect2?param2=value2';
 
     /**
      * Test successful auth with redirect URI.
-     *
      * @throws Exception
      */
     public function testSuccessfulCodeIssue()
     {
         $server = new SampleServer($this->createRepositoryMock($this->createClient()));
-        $state  = '123';
+        $state = '123';
 
-        $request  = $this->createAuthRequest(
+        $request = $this->createAuthRequest(
             static::CLIENT_ID,
             static::REDIRECT_URI_1,
             static::CLIENT_DEFAULT_SCOPE,
@@ -87,18 +84,16 @@ class CodeServerTest extends ServerTestCase
 
     /**
      * Test successful auth with redirect URI.
-     *
      * @link https://github.com/limoncello-php/framework/issues/49
-     *
      * @throws Exception
      */
     public function testSuccessfulCodeIssueEmptyScope()
     {
         $client = $this->createClient()->useDefaultScopesOnEmptyRequest();
         $server = new SampleServer($this->createRepositoryMock($client));
-        $state  = '123';
+        $state = '123';
 
-        $request  = $this->createAuthRequest(
+        $request = $this->createAuthRequest(
             static::CLIENT_ID,
             static::REDIRECT_URI_1,
             '', // <-- empty scope
@@ -111,7 +106,6 @@ class CodeServerTest extends ServerTestCase
 
     /**
      * Test successful auth without redirect URI.
-     *
      * @throws Exception
      */
     public function testSuccessfulCodeIssueWithoutRedirectUri()
@@ -123,7 +117,7 @@ class CodeServerTest extends ServerTestCase
         $server = new SampleServer($this->createRepositoryMock($client));
         $server->setInputUriOptional();
 
-        $request  = $this->createAuthRequest(
+        $request = $this->createAuthRequest(
             static::CLIENT_ID,
             null,
             static::CLIENT_DEFAULT_SCOPE
@@ -135,7 +129,6 @@ class CodeServerTest extends ServerTestCase
 
     /**
      * Test failed auth without redirect URI.
-     *
      * @throws Exception
      */
     public function testFailedCodeIssueWithoutRedirectUri1()
@@ -147,7 +140,7 @@ class CodeServerTest extends ServerTestCase
         $server = new SampleServer($this->createRepositoryMock($client));
         $server->setInputUriMandatory();
 
-        $request  = $this->createAuthRequest(
+        $request = $this->createAuthRequest(
             static::CLIENT_ID,
             null,
             static::CLIENT_DEFAULT_SCOPE
@@ -159,7 +152,6 @@ class CodeServerTest extends ServerTestCase
 
     /**
      * Test failed auth without redirect URI.
-     *
      * @throws Exception
      */
     public function testFailedCodeIssueWithoutRedirectUri2()
@@ -170,7 +162,7 @@ class CodeServerTest extends ServerTestCase
 
         $server = new SampleServer($this->createRepositoryMock($client));
 
-        $request  = $this->createAuthRequest(
+        $request = $this->createAuthRequest(
             static::CLIENT_ID,
             null,
             static::CLIENT_DEFAULT_SCOPE
@@ -182,7 +174,6 @@ class CodeServerTest extends ServerTestCase
 
     /**
      * Test failed auth due to too long `state` parameter.
-     *
      * @throws Exception
      */
     public function testFailedCodeIssueDueToTooLongStateParameter()
@@ -195,7 +186,7 @@ class CodeServerTest extends ServerTestCase
         $state = '123';
         $server->setMaxStateLength(1);
 
-        $request  = $this->createAuthRequest(
+        $request = $this->createAuthRequest(
             static::CLIENT_ID,
             static::REDIRECT_URI_1,
             static::CLIENT_DEFAULT_SCOPE,
@@ -210,7 +201,6 @@ class CodeServerTest extends ServerTestCase
 
     /**
      * Test failed auth due to invalid scope.
-     *
      * @throws Exception
      */
     public function testFailedCodeIssueDueInvalidScope()
@@ -218,9 +208,9 @@ class CodeServerTest extends ServerTestCase
         $client = $this->createClient();
         $client->setRedirectionUris([static::REDIRECT_URI_1]);
         $server = new SampleServer($this->createRepositoryMock($client));
-        $state  = '123';
+        $state = '123';
 
-        $request  = $this->createAuthRequest(
+        $request = $this->createAuthRequest(
             static::CLIENT_ID,
             static::REDIRECT_URI_1,
             static::CLIENT_DEFAULT_SCOPE . ' and something else',
@@ -235,7 +225,6 @@ class CodeServerTest extends ServerTestCase
 
     /**
      * Test failed auth due to client does not allow code authorization grant.
-     *
      * @throws Exception
      */
     public function testFailedCodeIssueDueCodeAuthorizationGrantIsNotAllowed()
@@ -246,7 +235,7 @@ class CodeServerTest extends ServerTestCase
 
         $server = new SampleServer($this->createRepositoryMock($client));
 
-        $request  = $this->createAuthRequest(
+        $request = $this->createAuthRequest(
             static::CLIENT_ID,
             static::REDIRECT_URI_1,
             static::CLIENT_DEFAULT_SCOPE
@@ -260,14 +249,13 @@ class CodeServerTest extends ServerTestCase
 
     /**
      * Test successful token issue with redirect URI.
-     *
      * @throws Exception
      */
     public function testSuccessfulTokenIssue()
     {
         $server = new SampleServer($this->createRepositoryMock($this->createClient()));
 
-        $request  = $this->createTokenRequest(
+        $request = $this->createTokenRequest(
             static::CLIENT_ID,
             SampleServer::TEST_AUTH_CODE,
             static::REDIRECT_URI_1
@@ -279,13 +267,12 @@ class CodeServerTest extends ServerTestCase
 
     /**
      * Test successful token issue with redirect URI and client authentication.
-     *
      * @throws Exception
      */
     public function testSuccessfulTokenIssueWithClientAuthentication()
     {
         $identifier = static::CLIENT_ID;
-        $password   = static::CLIENT_PASSWORD;
+        $password = static::CLIENT_PASSWORD;
 
         $client = $this->createClient()
             ->setCredentials(password_hash(static::CLIENT_PASSWORD, PASSWORD_DEFAULT));
@@ -294,7 +281,7 @@ class CodeServerTest extends ServerTestCase
 
         $server = new SampleServer($this->createRepositoryMock($client));
 
-        $request  = $this->createTokenRequest(
+        $request = $this->createTokenRequest(
             static::CLIENT_ID,
             SampleServer::TEST_AUTH_CODE,
             static::REDIRECT_URI_1,
@@ -307,13 +294,12 @@ class CodeServerTest extends ServerTestCase
 
     /**
      * Test failed token issue with client id not matching client authentication.
-     *
      * @throws Exception
      */
     public function testFailedTokenIssueWithClientAuthentication()
     {
         $identifier = static::CLIENT_ID;
-        $password   = static::CLIENT_PASSWORD;
+        $password = static::CLIENT_PASSWORD;
 
         $client = $this->createClient()
             ->setCredentials(password_hash(static::CLIENT_PASSWORD, PASSWORD_DEFAULT));
@@ -322,7 +308,7 @@ class CodeServerTest extends ServerTestCase
 
         $server = new SampleServer($this->createNoMethodsRepositoryMock());
 
-        $request  = $this->createTokenRequest(
+        $request = $this->createTokenRequest(
             static::CLIENT_ID . '_xxx', // <-- invalid client id here
             SampleServer::TEST_AUTH_CODE,
             static::REDIRECT_URI_1,
@@ -337,7 +323,6 @@ class CodeServerTest extends ServerTestCase
 
     /**
      * Test failed token issue due to client denied code auth.
-     *
      * @throws Exception
      */
     public function testFailedTokenIssueDueToClientDeniedCodeAuth()
@@ -345,7 +330,7 @@ class CodeServerTest extends ServerTestCase
         $client = $this->createClient()->disableCodeAuthorization();
         $server = new SampleServer($this->createRepositoryMock($client));
 
-        $request  = $this->createTokenRequest(
+        $request = $this->createTokenRequest(
             static::CLIENT_ID,
             SampleServer::TEST_AUTH_CODE,
             static::REDIRECT_URI_1
@@ -359,14 +344,13 @@ class CodeServerTest extends ServerTestCase
 
     /**
      * Test failed token issue due to invalid auth code.
-     *
      * @throws Exception
      */
     public function testFailedTokenIssueDueToInvalidAuthCode()
     {
         $server = new SampleServer($this->createRepositoryMock($this->createClient()));
 
-        $request  = $this->createTokenRequest(
+        $request = $this->createTokenRequest(
             static::CLIENT_ID,
             SampleServer::TEST_AUTH_CODE . '_xxx', // <-- invalid auth code
             static::REDIRECT_URI_1
@@ -380,14 +364,13 @@ class CodeServerTest extends ServerTestCase
 
     /**
      * Test failed token issue due to used earlier auth code.
-     *
      * @throws Exception
      */
     public function testFailedTokenIssueDueToUsedEarlierAuthCode()
     {
         $server = new SampleServer($this->createRepositoryMock($this->createClient()));
 
-        $request  = $this->createTokenRequest(
+        $request = $this->createTokenRequest(
             static::CLIENT_ID,
             SampleServer::TEST_USED_AUTH_CODE, // <-- 'used earlier' auth code
             static::REDIRECT_URI_1
@@ -401,13 +384,12 @@ class CodeServerTest extends ServerTestCase
 
     /**
      * Test failed token issue due to the auth token was issued to another client.
-     *
      * @throws Exception
      */
     public function testFailedTokenIssueDueToAuthTokenIssuedToAnotherClient()
     {
         $identifier = static::CLIENT_ID . '_modified';
-        $password   = static::CLIENT_PASSWORD;
+        $password = static::CLIENT_PASSWORD;
 
         $client = $this->createClient()
             ->setIdentifier($identifier)
@@ -417,7 +399,7 @@ class CodeServerTest extends ServerTestCase
 
         $server = new SampleServer($this->createRepositoryMock($client));
 
-        $request  = $this->createTokenRequest(
+        $request = $this->createTokenRequest(
             $identifier,
             SampleServer::TEST_AUTH_CODE, // <-- we know that this token is assigned to other client id
             static::REDIRECT_URI_1,
@@ -432,14 +414,13 @@ class CodeServerTest extends ServerTestCase
 
     /**
      * Test failed token issue due to absent redirect URI.
-     *
      * @throws Exception
      */
     public function testFailedTokenIssueDueAbsentRedirectUri()
     {
         $server = new SampleServer($this->createRepositoryMock($this->createClient()));
 
-        $request  = $this->createTokenRequest(
+        $request = $this->createTokenRequest(
             static::CLIENT_ID,
             SampleServer::TEST_AUTH_CODE,
             null // we know that redirect URI was used for getting auth code
@@ -453,7 +434,6 @@ class CodeServerTest extends ServerTestCase
 
     /**
      * @param ClientInterface $client
-     *
      * @return RepositoryInterface
      */
     private function createRepositoryMock(ClientInterface $client): RepositoryInterface
@@ -473,11 +453,9 @@ class CodeServerTest extends ServerTestCase
     private function createNoMethodsRepositoryMock(): RepositoryInterface
     {
         /** @var Mock $mock */
-        $mock = Mockery::mock(RepositoryInterface::class);
-
         /** @var RepositoryInterface $mock */
 
-        return $mock;
+        return Mockery::mock(RepositoryInterface::class);
     }
 
     /**
@@ -485,20 +463,17 @@ class CodeServerTest extends ServerTestCase
      */
     private function createClient(): Client
     {
-        $client = (new Client(static::CLIENT_ID))
+        return (new Client(static::CLIENT_ID))
             ->enableCodeAuthorization()
             ->setScopes(explode(' ', static::CLIENT_DEFAULT_SCOPE))
             ->setRedirectionUris([static::REDIRECT_URI_1, static::REDIRECT_URI_2]);
-
-        return $client;
     }
 
     /**
-     * @param string      $clientId
+     * @param string $clientId
      * @param string|null $redirectUri
      * @param string|null $scope
      * @param string|null $state
-     *
      * @return ServerRequestInterface
      */
     private function createAuthRequest(
@@ -506,25 +481,21 @@ class CodeServerTest extends ServerTestCase
         string $redirectUri = null,
         string $scope = null,
         string $state = null
-    )
-    {
-        $request = $this->createServerRequest(null, [
+    ): ServerRequestInterface {
+        return $this->createServerRequest(null, [
             'response_type' => 'code',
-            'client_id'     => $clientId,
-            'redirect_uri'  => $redirectUri,
-            'scope'         => $scope,
-            'state'         => $state,
+            'client_id' => $clientId,
+            'redirect_uri' => $redirectUri,
+            'scope' => $scope,
+            'state' => $state,
         ]);
-
-        return $request;
     }
 
     /**
-     * @param string      $clientId
-     * @param string      $code
+     * @param string $clientId
+     * @param string $code
      * @param string|null $redirectUri
-     * @param array|null  $headers
-     *
+     * @param array|null $headers
      * @return ServerRequestInterface
      */
     private function createTokenRequest(
@@ -532,15 +503,12 @@ class CodeServerTest extends ServerTestCase
         string $code,
         string $redirectUri = null,
         array $headers = null
-    )
-    {
-        $request = $this->createServerRequest([
-            'grant_type'   => 'authorization_code',
-            'code'         => $code,
+    ): ServerRequestInterface {
+        return $this->createServerRequest([
+            'grant_type' => 'authorization_code',
+            'code' => $code,
             'redirect_uri' => $redirectUri,
-            'client_id'    => $clientId,
+            'client_id' => $clientId,
         ], null, $headers);
-
-        return $request;
     }
 }
